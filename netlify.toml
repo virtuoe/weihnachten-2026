@@ -1,0 +1,25 @@
+# Klangerfinder Weihnachtsaktion 2026 · Dummy
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/game"
+  to = "/spiel/"
+  status = 301
+
+[[redirects]]
+  from = "/play"
+  to = "/spiel/"
+  status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
