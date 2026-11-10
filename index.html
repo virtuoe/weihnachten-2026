@@ -36,20 +36,21 @@
   --acc-on-k: #7D84B2;
   --acc-on-w: #6D739B;
   /* Fläche 1 trägt Hero, Leistungen, Kontakt; Fläche 2 die Abschnitte dazwischen */
-  --s1: #000; --s1-fg: #fff; --s1-mute: #C8C8C8; --s1-line: #3A3A38; --s1-acc: var(--acc-on-k);
-  --s2: #fff; --s2-fg: #000; --s2-mute: #5E5E5E; --s2-line: #D9D9D9; --s2-acc: var(--acc-on-w);
+  --s1: #000; --s1-fg: #fff; --s1-mute: #fff; --s1-line: #3A3A38; --s1-acc: var(--acc-on-k);
+  --s2: #fff; --s2-fg: #000; --s2-mute: #000; --s2-line: #D9D9D9; --s2-acc: var(--acc-on-w);
   /* Cursor: der Klangerfinder-Pfeil in Lavendelblau, Spitze unten rechts */
-  --cur: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='20 22 602 602'%3E%3Cpath d='M434.5 494.2L60 119.7L118.4 62.1L492.2 436.5L581.9 346L581.9 584L344.7 584Z' fill='%237D84B2' stroke='%23000' stroke-width='44' stroke-linejoin='round' paint-order='stroke'/%3E%3C/svg%3E") 26 26;
-  --cur-on: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='20 22 602 602'%3E%3Cpath d='M434.5 494.2L60 119.7L118.4 62.1L492.2 436.5L581.9 346L581.9 584L344.7 584Z' fill='%23fff' stroke='%237D84B2' stroke-width='60' stroke-linejoin='round' paint-order='stroke'/%3E%3C/svg%3E") 26 26;
+  --cur: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='20 22 602 602'%3E%3Cpath d='M434.5 494.2L60 119.7L118.4 62.1L492.2 436.5L581.9 346L581.9 584L344.7 584Z' fill='%23fff' stroke='%23000' stroke-width='44' stroke-linejoin='round' paint-order='stroke'/%3E%3C/svg%3E") 26 26;
+  --cur-on: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='20 22 602 602'%3E%3Cpath d='M434.5 494.2L60 119.7L118.4 62.1L492.2 436.5L581.9 346L581.9 584L344.7 584Z' fill='%237D84B2' stroke='%23000' stroke-width='44' stroke-linejoin='round' paint-order='stroke'/%3E%3C/svg%3E") 26 26;
 }
 :root[data-theme="light"]{
-  --s1: #fff; --s1-fg: #000; --s1-mute: #5E5E5E; --s1-line: #D9D9D9; --s1-acc: var(--acc-on-w);
-  --s2: #000; --s2-fg: #fff; --s2-mute: #C8C8C8; --s2-line: #3A3A38; --s2-acc: var(--acc-on-k);
+  --cur: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='20 22 602 602'%3E%3Cpath d='M434.5 494.2L60 119.7L118.4 62.1L492.2 436.5L581.9 346L581.9 584L344.7 584Z' fill='%23000' stroke='%23fff' stroke-width='44' stroke-linejoin='round' paint-order='stroke'/%3E%3C/svg%3E") 26 26;
+  --s1: #fff; --s1-fg: #000; --s1-mute: #000; --s1-line: #D9D9D9; --s1-acc: var(--acc-on-w);
+  --s2: #000; --s2-fg: #fff; --s2-mute: #fff; --s2-line: #3A3A38; --s2-acc: var(--acc-on-k);
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth;cursor:var(--cur),auto;background:var(--s1)}
-body{margin:0;background:var(--s1);color:var(--s1-fg);font-family:var(--sans);font-size:18px;line-height:1.45;-webkit-font-smoothing:antialiased}
-a,button,.strokes{cursor:var(--cur-on),pointer}
+body{margin:0;overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto;background:var(--s1);color:var(--s1-fg);font-family:var(--sans);font-size:18px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a,button,.strokes,.strokes *{cursor:var(--cur-on),pointer}
 img,svg{display:block;max-width:100%}
 a{color:inherit}
 button{font:inherit;color:inherit}
@@ -72,6 +73,12 @@ h2{font-weight:700;font-size:clamp(40px,6.4vw,96px);line-height:1;letter-spacing
 .stair>span:nth-child(3){margin-left:calc(var(--step)*2)}
 @media (min-width:900px){.stair{--step:1em}}
 
+.rail{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(20px,4vw,40px)}
+.side{margin:0;font-weight:700;font-size:clamp(32px,11.5vw,96px);line-height:.88;letter-spacing:-.035em}
+@media (min-width:900px){
+  .rail{grid-template-columns:auto minmax(0,1fr);gap:clamp(40px,5vw,88px)}
+  .side{writing-mode:vertical-rl;transform:rotate(180deg);position:sticky;top:28px;align-self:start;font-size:clamp(88px,8.4vw,136px);white-space:nowrap}
+}
 .tag{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;background:var(--inv-bg);color:var(--inv-fg);font-family:var(--mono);font-size:14px}
 .arrow{display:inline-flex;align-items:center;gap:.5em;min-height:44px;font-weight:700;font-size:clamp(20px,2vw,28px);text-decoration:none;color:var(--acc-t)}
 .arrow:hover{text-decoration:underline;text-underline-offset:.18em}
@@ -94,6 +101,20 @@ h2{font-weight:700;font-size:clamp(40px,6.4vw,96px);line-height:1;letter-spacing
 .lang button{background:none;border:0;padding:0 5px;min-height:44px;min-width:34px;color:var(--mute)}
 .lang button[aria-pressed="true"]{color:inherit;text-decoration:underline;text-underline-offset:.3em}
 .k .lang button[aria-pressed="true"]{color:var(--s1-fg)}
+.snd{display:flex;align-items:center;gap:10px;height:44px;min-width:44px;padding:0 10px;border:0;background:none;color:inherit}
+.snd svg{width:22px;height:22px;flex:none;overflow:visible}
+.snd rect{fill:currentColor;transform-box:fill-box;transform-origin:50% 100%}
+.snd .x{stroke:var(--s1-acc);stroke-width:3;stroke-linecap:square;transform-box:fill-box;transform-origin:0 0;transition:transform .35s var(--ease)}
+.snd .sl{display:none;font-weight:700;font-size:16px;white-space:nowrap;color:var(--s1-acc);overflow:hidden;max-width:12em;transition:max-width .45s var(--ease),opacity .3s}
+.snd.on .x{transform:scale(0)}
+.snd.on .sl{max-width:0;opacity:0}
+.snd.on.play rect{animation:eq .42s ease-in-out 4 alternate}
+.snd.on.play .b2{animation-delay:.1s}.snd.on.play .b3{animation-delay:.2s}.snd.on.play .b4{animation-delay:.05s}
+.snd.nudge svg{animation:nudge .5s var(--ease)}
+.snd:hover rect{fill:var(--s1-acc)}
+@keyframes eq{to{transform:scaleY(.35)}}
+@keyframes nudge{25%{transform:rotate(-12deg)}55%{transform:rotate(9deg)}80%{transform:rotate(-4deg)}}
+@media (min-width:760px){.snd .sl{display:block}}
 .theme{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:none}
 .theme span{display:block;width:20px;height:20px;border-radius:50%;border:2px solid currentColor;background:linear-gradient(90deg,currentColor 50%,transparent 50%);transition:transform .45s var(--ease)}
 :root[data-theme="light"] .theme span{transform:rotate(180deg)}
@@ -116,7 +137,18 @@ h1{font-weight:700;font-size:clamp(34px,10.6vw,96px);line-height:.95;letter-spac
 .xcard .lbl{grid-column:1/-1;font-family:var(--mono);font-size:14px;line-height:1.3}
 .xcard .pics{display:flex;align-items:flex-end;gap:10px}
 .xcard .star{width:56px;height:56px;animation:spin 48s linear infinite}
-.xcard .tree{display:none;width:64px;height:auto}
+.xcard .tree{width:62px;height:auto}
+.xcard .tree rect{fill:var(--acc-ink);transform-box:fill-box;transform-origin:50% 50%}
+.xcard .tree{overflow:hidden}
+.xcard .tree .tb{animation:stack 6.4s infinite both;animation-delay:calc(var(--k) * .17s)}
+/* Balken fallen von oben aufeinander, federn kurz nach, stehen und verblassen dann wieder */
+@keyframes stack{
+  0%{transform:translateY(-1800px);opacity:1;animation-timing-function:cubic-bezier(.5,0,1,.6)}
+  9%{transform:translateY(0);animation-timing-function:cubic-bezier(0,.5,.5,1)}
+  11%{transform:translateY(-36px);animation-timing-function:cubic-bezier(.5,0,1,.5)}
+  13%,66%{transform:translateY(0);opacity:1}
+  76%,100%{transform:translateY(0);opacity:0}
+}
 .xcard svg path{fill:var(--acc-ink)}
 .xcard .ttl{font-weight:700;font-size:clamp(26px,7vw,34px);line-height:1;letter-spacing:-.02em}
 .xcard .txt{display:none;font-size:18px;line-height:1.4}
@@ -130,7 +162,8 @@ h1{font-weight:700;font-size:clamp(34px,10.6vw,96px);line-height:.95;letter-spac
   .xcard:hover{clip-path:polygon(0 0,100% 0,100% calc(100% - 64px),calc(100% - 64px) 100%,0 100%)}
   .xcard .pics{justify-content:space-between;gap:16px}
   .xcard .star{width:clamp(96px,10vw,140px);height:clamp(96px,10vw,140px)}
-  .xcard .tree{display:block;width:clamp(84px,8.4vw,120px)}
+  .xcard .tree{width:clamp(100px,9.5vw,136px)}
+  .xcard .pics{align-items:flex-end}
   .xcard .ttl{font-size:clamp(34px,3.4vw,48px)}
   .xcard .txt{display:block}
   .xcard .go{min-height:56px;padding-right:56px}
@@ -159,11 +192,15 @@ h1{font-weight:700;font-size:clamp(34px,10.6vw,96px);line-height:.95;letter-spac
 .cases button::after{content:"";position:absolute;top:-12px;bottom:-12px;left:calc(var(--s)*-1.05);right:calc(var(--s)*-1.05)}
 .cases button[aria-selected="true"]{width:var(--l);height:var(--s);background:var(--acc-t)}
 .cpanels{display:grid}
-.cp{grid-area:1/1;display:grid;gap:10px;align-content:start;visibility:hidden;opacity:0;transition:opacity .3s,visibility 0s .3s}
+.cp{grid-area:1/1;display:grid;gap:clamp(18px,3vw,40px);align-content:start;visibility:hidden;opacity:0;transition:opacity .3s,visibility 0s .3s}
 .cp.on{visibility:visible;opacity:1;transition:opacity .3s .05s}
+.cp .cx{display:grid;gap:12px;align-content:start}
+.cp .num{font-size:clamp(64px,9vw,132px);line-height:.8;letter-spacing:-.05em}
+.cp .num span{font-size:.28em;letter-spacing:0;margin-left:.15em}
+@media (min-width:1000px){.cpanels .cp{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.cp .ph{order:2}}
 .cp h3{font-weight:700;font-size:clamp(30px,4.4vw,64px);line-height:1.02;letter-spacing:-.015em;max-width:15em}
-.cp .kd{font-family:var(--mono);font-size:15px;line-height:1.45;color:var(--fg)}
-.cp p.tx{color:var(--mute);font-size:clamp(18px,1.6vw,22px);max-width:36em}
+.cp .kd{font-weight:700;font-size:clamp(17px,1.4vw,20px);line-height:1.4}
+.cp p.tx{font-size:clamp(17px,1.4vw,20px);line-height:1.5;max-width:36em}
 .cp a{color:var(--acc-t);font-weight:700;text-underline-offset:.18em;display:inline-flex;align-items:center;min-height:44px}
 .cnav{display:flex;align-items:center;gap:8px;margin-bottom:clamp(24px,3vw,40px)}
 .cnav button{display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;background:none;box-shadow:inset 0 0 0 1px var(--line);font-size:22px;color:inherit}
@@ -171,13 +208,16 @@ h1{font-weight:700;font-size:clamp(34px,10.6vw,96px);line-height:.95;letter-spac
 .cnav .mono{margin-left:8px}
 
 /* Leistungen */
-.svc{display:grid;gap:clamp(24px,4vw,40px)}
+.svc{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(24px,4vw,40px)}
+.spanels,.cpanels{grid-template-columns:minmax(0,1fr)}
+.sp,.cx{grid-template-columns:minmax(0,1fr);min-width:0}
+.cp{grid-template-columns:minmax(0,1fr)}
 .svc ol{display:grid}
-.svc li button{position:relative;display:grid;grid-template-columns:3em minmax(0,1fr) auto;align-items:center;gap:0 12px;width:100%;min-height:60px;padding:20px 0 14px;border:0;background:none;text-align:left;color:var(--mute);transition:color .25s}
+.svc li button{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 12px;width:100%;min-height:60px;padding:20px 0 14px;border:0;background:none;text-align:left;color:var(--mute);transition:color .25s}
 .svc .ln{position:absolute;left:0;right:0;top:0;height:1px;background:var(--line);transition:height .45s var(--ease)}
 .svc .ln i{position:absolute;inset:0;background:var(--acc-t);transform:scaleX(0);transform-origin:0 50%;transition:transform .55s var(--ease)}
-.svc .no{font-family:var(--mono);font-size:14px}
-.svc .t{font-weight:700;font-size:clamp(24px,2.6vw,36px);line-height:1.15}
+.svc .t{font-weight:700;font-size:clamp(18px,5.6vw,24px);line-height:1.12;min-width:0}
+@media (min-width:900px){.svc .t{font-size:clamp(22px,2.2vw,32px)}}
 .svc .ar{font-weight:700;font-size:clamp(22px,2.2vw,30px);color:var(--acc-t);transform:rotate(-45deg);opacity:0;transition:transform .45s var(--ease),opacity .25s}
 .svc button[aria-selected="true"]{color:var(--fg)}
 .svc button[aria-selected="true"] .ln{height:clamp(8px,1vw,14px)}
@@ -188,33 +228,40 @@ h1{font-weight:700;font-size:clamp(34px,10.6vw,96px);line-height:.95;letter-spac
 .spanels{display:grid}
 .sp{grid-area:1/1;display:grid;gap:12px;align-content:start;visibility:hidden;opacity:0;transition:opacity .3s,visibility 0s .3s}
 .sp.on{visibility:visible;opacity:1;transition:opacity .3s .05s}
-.sp p:not(.mono){font-size:clamp(20px,2vw,28px);line-height:1.45;max-width:24em}
+.sp .tx{display:grid;gap:14px}
+.sp .tx p{font-size:clamp(17px,1.35vw,20px);line-height:1.5;max-width:40em}
+.sp .plat{display:flex;flex-wrap:wrap;gap:4px 18px;font-weight:700}
+.sp .plat span:first-child{flex-basis:100%;font-weight:400}
+.ph{margin:0;aspect-ratio:3/2;overflow:hidden;background:var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.06)}
 @media (min-width:900px){
   .svc{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:64px;align-items:start}
-  .spanels{position:sticky;top:96px;padding-top:20px}
+  .spanels{position:sticky;top:28px;padding-top:20px}
 }
 
 /* Team */
 .team{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:0 32px}
 .team li{display:grid;gap:4px;align-content:start;padding:18px 0 22px;border-top:1px solid var(--line)}
 .team h3{font-weight:700;font-size:clamp(22px,2vw,28px);line-height:1.15}
-.team p{font-family:var(--mono);font-size:14px;line-height:1.45;color:var(--mute)}
+.team .roles{display:grid;gap:2px;font-size:16px;line-height:1.4}
+.team .roles li{position:relative;padding:0 0 0 1.35em;border:0;display:block}
+.team .roles li::before{content:'↘';position:absolute;left:0;top:0;color:var(--acc-t);font-weight:700}
 
 /* Kontakt und Fuß */
 .contact{display:grid;gap:clamp(28px,4vw,48px)}
 .contact h2{font-size:clamp(52px,11vw,176px);line-height:.95;letter-spacing:-.03em}
-.addr{display:grid;gap:2px;font-style:normal;font-family:var(--mono);font-size:15px;line-height:1.6;color:var(--mute)}
+.addr{display:grid;gap:2px;font-style:normal;font-size:clamp(18px,1.6vw,22px);line-height:1.5}
 .addr a{display:inline-flex;align-items:center;min-height:32px;color:var(--acc-t);text-underline-offset:.2em}
 footer.sec{padding-top:0;padding-bottom:max(40px,env(safe-area-inset-bottom))}
 footer .in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 40px;padding-top:32px;border-top:1px solid var(--line)}
 .sig svg{height:28px;width:auto}
-footer .meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 24px}
+footer .meta{font-size:15px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 24px}
 footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-underline-offset:.2em}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .arrow i,.xcard,.xcard .go i,.cases button,.cp,.sp,.svc .ln,.svc .ln i,.svc .ar,.theme span{transition-duration:.01ms!important;transition-delay:0s!important}
-  .xcard .star{animation:none}
+  .xcard .star,.xcard .tree .tb{animation:none!important;opacity:1!important;transform:none!important}
 }
 </style>
 </head>
@@ -234,6 +281,7 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
         <div class="lang" role="group" aria-label="Sprache / Language">
           <button type="button" data-lang="de" aria-pressed="true">DE</button><span aria-hidden="true">|</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
         </div>
+        <button class="snd" id="snd" type="button" aria-pressed="false"><span class="sl" id="sndl"></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="b1" x="2" y="12" width="3" height="10"/><rect class="b2" x="8" y="6" width="3" height="16"/><rect class="b3" x="14" y="9" width="3" height="13"/><rect class="b4" x="20" y="3" width="3" height="19"/><path class="x" d="M2.5 2.5L21.5 21.5"/></svg></button>
         <button class="theme" id="theme" type="button"><span aria-hidden="true"></span></button>
       </nav>
     </header>
@@ -247,90 +295,76 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
         </div>
       </div>
       <a class="xcard" href="spiel/">
-        <span class="lbl" data-t="xLbl">Weihnachten 2026 · Unser Spiel</span>
         <span class="pics" aria-hidden="true">
           <svg class="star" viewBox="0 0 2549.9 2549.9"><path fill-rule="evenodd" d="M1218.7 1534.6 L1331.2 1535.3 L1330.5 2260.1 L1505.1 2259.4 L1274.6 2489.9 L1044.8 2260.1 L1218.7 2260.1Z M1418.8 1498.3 L1498.8 1419.3 L2010.8 1932.3 L2133.8 1808.3 L2133.8 2134.3 L1808.8 2134.3 L1931.8 2011.3Z M1051.6 1418.8 L1130.6 1498.8 L617.6 2010.8 L741.6 2133.8 L415.6 2133.8 L415.6 1808.8 L538.6 1931.8Z M1534.6 1331.2 L1535.3 1218.7 L2260.1 1219.4 L2259.4 1044.8 L2489.9 1275.3 L2260.1 1505.1 L2260.1 1331.2Z M1015.3 1218.7 L1014.6 1331.2 L289.8 1330.5 L290.5 1505.1 L60 1274.6 L289.8 1044.8 L289.8 1218.7Z M1498.3 1131.1 L1419.3 1051.1 L1932.3 539.1 L1808.3 416.1 L2134.3 416.1 L2134.3 741.1 L2011.3 618.1Z M1131.1 1051.6 L1051.1 1130.6 L539.1 617.6 L416.1 741.6 L416.1 415.6 L741.1 415.6 L618.1 538.6Z M1331.2 1015.3 L1218.7 1014.6 L1219.4 289.8 L1044.8 290.5 L1275.3 60 L1505.1 289.8 L1331.2 289.8Z"/></svg>
-          <svg class="tree" viewBox="0 0 2980 1850"><path fill-rule="evenodd" d="M1415 1490 L60 1490 L60 1380 L2920 1380 L2920 1490 L1565 1490 L1565 1790 L1415 1790Z M2700 1160 L2700 1270 L280 1270 L280 1160Z M2480 940 L2480 1050 L500 1050 L500 940Z M2260 720 L2260 830 L720 830 L720 720Z M2040 500 L2040 610 L940 610 L940 500Z M1820 280 L1820 390 L1160 390 L1160 280Z M1600 60 L1600 170 L1380 170 L1380 60Z"/></svg>
+          <svg class="tree" viewBox="0 0 1200 1700"><rect class="tb" style="--k:0" x="550" y="1500" width="100" height="200"/><rect class="tb" style="--k:1" x="40" y="1410" width="1120" height="90"/><rect class="tb" style="--k:2" x="100" y="1260" width="1000" height="90"/><rect class="tb" style="--k:3" x="160" y="1110" width="880" height="90"/><rect class="tb" style="--k:4" x="220" y="960" width="760" height="90"/><rect class="tb" style="--k:5" x="280" y="810" width="640" height="90"/><rect class="tb" style="--k:6" x="340" y="660" width="520" height="90"/><rect class="tb" style="--k:7" x="400" y="510" width="400" height="90"/><rect class="tb" style="--k:8" x="460" y="360" width="280" height="90"/><rect class="tb" style="--k:9" x="520" y="210" width="160" height="90"/></svg>
         </span>
         <span class="ttl" data-t="xTtl">Santa braucht Hilfe.</span>
         <span class="txt" data-t="xTxt">Der Weihnachtsmann hat seinen Jingle verloren. Erkunde, nimm Klänge auf und baue ihm einen neuen.</span>
         <span class="go"><span data-t="play">Spiel starten</span><i aria-hidden="true">↘</i></span>
-        <span class="hint" data-t="xHint">Ton an · Handy quer halten</span>
       </a>
     </main>
 
     <div class="domino">
       <div class="strokes" id="strokes" role="img" aria-label="24 Striche, die wie Dominosteine umfallen"></div>
-      <p class="mono row"><span id="hint"></span><span id="adv"></span></p>
     </div>
   </div>
 </div>
 
 <section class="sec w" id="arbeiten">
-  <div class="in">
+  <div class="in rail"><h2 class="side" data-t="workTag">Arbeiten</h2><div class="main">
     <div class="head">
-      <p class="tag" data-t="workTag">↘ Arbeiten</p>
       <div class="chips" id="chips" role="group" aria-label="Filter"></div>
     </div>
     <div class="casewrap"><div class="cases" id="cases" role="tablist" aria-label="Arbeiten"></div></div>
-    <div class="cnav"><button id="cprev" type="button"><span aria-hidden="true">←</span></button><button id="cnext" type="button"><span aria-hidden="true">→</span></button><span class="mono" id="chint"></span></div>
+    <div class="cnav"><button id="cprev" type="button"><span aria-hidden="true">←</span></button><button id="cnext" type="button"><span aria-hidden="true">→</span></button></div>
     <div class="cpanels" id="cpanels"></div>
-  </div>
+  </div></div>
 </section>
 
 <section class="sec k" id="leistungen">
-  <div class="in">
-    <div class="head">
-      <p class="tag" data-t="servTag">↘ Leistungen</p>
-    </div>
+  <div class="in rail"><h2 class="side" data-t="servTag">Leistungen</h2><div class="main">
     <div class="svc">
       <ol role="tablist" aria-orientation="vertical" aria-label="Leistungen" id="svcl">
-        <li><button type="button" role="tab" id="st0" aria-controls="sp0" aria-selected="true"><span class="ln" aria-hidden="true"><i></i></span><span class="no">01</span><span class="t" data-t="s0">Konzeption und Beratung</span><span class="ar" aria-hidden="true">↘</span></button></li>
-        <li><button type="button" role="tab" id="st1" aria-controls="sp1" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="no">02</span><span class="t" data-t="s1">Musik</span><span class="ar" aria-hidden="true">↘</span></button></li>
-        <li><button type="button" role="tab" id="st2" aria-controls="sp2" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="no">03</span><span class="t" data-t="s2">Sounddesign</span><span class="ar" aria-hidden="true">↘</span></button></li>
-        <li><button type="button" role="tab" id="st3" aria-controls="sp3" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="no">04</span><span class="t" data-t="s3">Sprache</span><span class="ar" aria-hidden="true">↘</span></button></li>
-        <li><button type="button" role="tab" id="st4" aria-controls="sp4" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="no">05</span><span class="t" data-t="s4">Aufnahme</span><span class="ar" aria-hidden="true">↘</span></button></li>
-        <li><button type="button" role="tab" id="st5" aria-controls="sp5" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="no">06</span><span class="t" data-t="s5">Mischung und Mastering</span><span class="ar" aria-hidden="true">↘</span></button></li>
-        <li><button type="button" role="tab" id="st6" aria-controls="sp6" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="no">07</span><span class="t" data-t="s6">Software</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st0" aria-controls="sp0" aria-selected="true"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s0">Konzeption &amp; Beratung</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st1" aria-controls="sp1" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s1">Musik vor Ort und im Studio</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st2" aria-controls="sp2" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s2">Sounddesign vor Ort und im Studio</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st3" aria-controls="sp3" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s3">Sprache vor Ort und im Studio</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st4" aria-controls="sp4" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s4">Ton-Aufnahmen vor Ort und im Studio</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st5" aria-controls="sp5" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s5">Ton-Mischungen und Mastering vor Ort und im Studio</span><span class="ar" aria-hidden="true">↘</span></button></li>
+        <li><button type="button" role="tab" id="st6" aria-controls="sp6" aria-selected="false" tabindex="-1"><span class="ln" aria-hidden="true"><i></i></span><span class="t" data-t="s6">Softwareentwicklung</span><span class="ar" aria-hidden="true">↘</span></button></li>
       </ol>
       <div class="spanels">
-        <div class="sp on" role="tabpanel" id="sp0" aria-labelledby="st0"><p class="mono">01 / 07</p><p data-t="s0p">Klangkonzepte, Workshops und Analysen. Wir übersetzen Markenwerte in Klang.</p></div>
-        <div class="sp" role="tabpanel" id="sp1" aria-labelledby="st1"><p class="mono">02 / 07</p><p data-t="s1p">Komposition, Produktion und Lizenzierung, vom Digitalen bis zum Symphonieorchester.</p></div>
-        <div class="sp" role="tabpanel" id="sp2" aria-labelledby="st2"><p class="mono">03 / 07</p><p data-t="s2p">Klang für Produkte, Medien, Interaktion und Raum.</p></div>
-        <div class="sp" role="tabpanel" id="sp3" aria-labelledby="st3"><p class="mono">04 / 07</p><p data-t="s3p">Brand Voice, Casting, Sprachregie und Aufnahme in vielen Sprachen.</p></div>
-        <div class="sp" role="tabpanel" id="sp4" aria-labelledby="st4"><p class="mono">05 / 07</p><p data-t="s4p">Im Studio und mobil vor Ort, von Mono bis Mehrkanal.</p></div>
-        <div class="sp" role="tabpanel" id="sp5" aria-labelledby="st5"><p class="mono">06 / 07</p><p data-t="s5p">Für alle gängigen Formate, bis zur Wellenfeldsynthese.</p></div>
-        <div class="sp" role="tabpanel" id="sp6" aria-labelledby="st6"><p class="mono">07 / 07</p><p data-t="s6p">Audio-Anwendungen und virtuelle Instrumente, für jedes Projekt entwickelt.</p></div>
+        <div class="sp on" role="tabpanel" id="sp0" aria-labelledby="st0"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1532622785990-d2c36a76f5a6?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1532622785990-d2c36a76f5a6?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1532622785990-d2c36a76f5a6?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Workshop am Whiteboard" loading="lazy" decoding="async"></figure><div class="tx" data-t="s0p"><p>Für Sie entwickeln wir Klangkonzepte und Ideen, wir bieten Musikberatung, wir übersetzen Markenwerte in Klang, wir beraten bei der technischen Planung bis hin zur Ausschreibung, wir stellen künstlerische Ensembles zusammen, wir erstellen akustische Wettbewerbsanalysen, wir führen Workshops durch, wir entwickeln Strategien und Ziele, wir entwickeln Tools zur Qualitätssicherung und -kontrolle auch im Hinblick auf einen internationalen Rollout, wir erstellen Gutachten und Handlungsempfehlungen, und vieles mehr...</p><p>Einige unserer Projekte betreuen wir von der ersten Idee über die Konzeption, die inhaltlich-gestalterische Kreation und Produktion bis hin zur technischen Implementierung. Bei komplexeren Projekten entwickeln wir gemeinsam mit unseren Kunden Ideen, Strategien und Ziele, leiten Markenwerte ab und übersetzen diese zielgruppenspezifisch in Klang. Wir legen Wert auf einen effizienten Workflow, solides Projektmanagement und eine durchgehende Qualitätssicherung.</p></div></div>
+        <div class="sp" role="tabpanel" id="sp1" aria-labelledby="st1"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1488630228244-bcdf33562a43?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1488630228244-bcdf33562a43?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1488630228244-bcdf33562a43?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Orchester auf der Bühne" loading="lazy" decoding="async"></figure><div class="tx" data-t="s1p"><p>Musik-Casting, Musikschnitt- und Bearbeitung, Künstler-Recherche, Lizenzierung aus dem KE- Eigen-Archiv (2500 Titel), Labelabwicklung, Rechte-Clearance, Musik-Komposition / alle Genres, Entwicklung innovativer Genre-Mixes/<wbr>Crossover, Inhouse und Netzwerk von 60 Komponisten weltweit, Ableitung und Zusammenstellung zielgruppenspezifischer Musikwelten, Musikproduktion von rein digitaler Programmierung über Instrumental- und Vokal-Ensembles bis hin zum Symphonieorchester, Orchesteraufnahmen, Partitur- und Einzelstimmenerstellung, Komposition und Produktion von modularer Musik für interaktive Umgebungen, Zusammenstellung/<wbr>Recherche/<wbr>Booking von Live-Acts/<wbr>Djs, Entwicklung und Programmierung von virtuellen Musikinstrumenten.</p></div></div>
+        <div class="sp" role="tabpanel" id="sp2" aria-labelledby="st2"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1634286050107-567499885ff9?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1634286050107-567499885ff9?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1634286050107-567499885ff9?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Synthesizer mit Drehreglern" loading="lazy" decoding="async"></figure><div class="tx" data-t="s2p"><p>Geräuschaufnahmen mit und ohne Geräuschemacher, Zugriff auf alle professionellen Geräusch- und Sounddesign-Archive weltweit, O-Tonbearbeitung, O-Ton- und Klangrestauration, umfangreiches und exklusives Eigen-Archiv an Geräuschen und SFX, Entwicklung/<wbr>Komposition/<wbr>Produktion von neuartigen aussermusikalischen Klängen für exklusive Medienproduktionen und Produktsounddesign, Entwicklung und Produktion von Interaktions- und Feedbacksounds für interaktive Umgebungen, Entwicklung interaktiver Raumklangwelten.</p></div></div>
+        <div class="sp" role="tabpanel" id="sp3" aria-labelledby="st3"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1531651008558-ed1740375b39?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1531651008558-ed1740375b39?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1531651008558-ed1740375b39?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Studiomikrofon mit Popschutz" loading="lazy" decoding="async"></figure><div class="tx" data-t="s3p"><p>Sprecher-Castings in allen Sprachen, Booking, Lizenzierung, Abwicklung, Rechte-Clearance, Synchronaufnahmen/<wbr>Voice-Over, umfangreiche Brand-Voice Castings, Sprachbearbeitung / Schnitt, Sprachregie, Restauration von Sprachaufnahmen, Sprachaufnahmen in unseren Studios via ISDN (APTX / Musiktaxi) live mit über 300 Partner-Studios weltweit, Eigensprecher-Archiv mit über 2000 Stimmproben, Übersetzungen in alle Sprachen (Lip-Sync und nicht Lip-Sync), Stimmen-Recherche.</p></div></div>
+        <div class="sp" role="tabpanel" id="sp4" aria-labelledby="st4"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1786131951421-562134203531?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1786131951421-562134203531?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1786131951421-562134203531?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Digitaler Audiorekorder" loading="lazy" decoding="async"></figure><div class="tx" data-t="s4p"><p>Aufnahmen von Mono bis Multikanal (unbegrenzte Kanalanzahl) in allen gängigen Formaten in unseren Studios oder mit Mobiltechnik weltweit, Bildsynchron, Spezialteam und technische Eigenentwicklungen für hochwertige Ton-Aufnahmen unter Extrembedingungen (z.B. in Maschinen, Fahrzeugen, an Rennstrecken, unter Wasser, Naturaufnahmen in extremer Höhe), Ultraschall- und Infraschall-Tonaufnahmen, klassische bis experimentelle Mikrophonierungen, O-Tonaufnahmen aller Art am Filmset in Stereo und in Dolby 5.1 oder 7.1.</p></div></div>
+        <div class="sp" role="tabpanel" id="sp5" aria-labelledby="st5"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1574517947730-55cb23e608c2?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1574517947730-55cb23e608c2?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1574517947730-55cb23e608c2?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Mischpult" loading="lazy" decoding="async"></figure><div class="tx" data-t="s5p"><p>Tonmischungen in allen Formaten von Mono über Stereo, Dolby 5.1, 7.1 bis hin zu komplexen Multikanalmischungen in hauseigenen Testumgebungen, Inhouse Wellenfeldsynthesemischungen auf Iosono-Raumklangsystem, Anpassung und Mastering aller Mischungen auf das Endmedium inkl. klanglicher Berücksichtigung der gängigen unkomprimierten sowie komprimierten Audioformate (insbesondere .wav, .aiff,, .mp3, AAC, AC3, .m4a, DST, .wma, DolbySR, DTS), Highend Mastering-Equipment (Massenburg, Manley, API, D.W. Fearn, Lexikon, Quantec, NEVE, Urei, siehe techn. Studio-Ausstattung), unsere mobilen Systeme können sowohl vor Ort als Timecode-Master fungieren, als auch zu SMPTE, OSC, MTC, RS232, MMC, LTC geslaved werden.</p></div></div>
+        <div class="sp" role="tabpanel" id="sp6" aria-labelledby="st6"><figure class="ph"><img src="https://images.unsplash.com/<wbr>photo-1542831371-29b0f74f9713?w=900&q=70&auto=format&fit=crop&ar=3:2" srcset="https://images.unsplash.com/<wbr>photo-1542831371-29b0f74f9713?w=600&q=70&auto=format&fit=crop&ar=3:2 600w, https://images.unsplash.com/<wbr>photo-1542831371-29b0f74f9713?w=1200&q=70&auto=format&fit=crop&ar=3:2 1200w" sizes="(min-width:900px) 44vw, 100vw" alt="Platzhalterbild: Programmcode" loading="lazy" decoding="async"></figure><div class="tx" data-t="s6p"><p>Während der Durchführung vieler Projekte zeigt sich immer wieder, dass herkömmliche am Markt verfügbare Audiotechnologien schnell an ihre Grenzen kommen, sobald Funktionen benötigt werden, die innovativ und etwas abseits vom Mainstream liegen. Aus diesem Grund entwickeln wir projektbezogen immer wieder Applikationen zur Audio-Aufnahme, -Wiedergabe und -Steuerung. So stammen z.B. die Audiosteuerung der interaktiven Kugel im Deutschen Pavillon auf der Expo 2010 in Shanghai, der erste Museumsaudioguide mit Bildtracking, so wie zahlreiche virtuelle Software-Instrumente aus unserer noch jungen Entwicklungsabteilung. Diese stetig wachsende Know-how fliesst unmittelbar in die technische Konzeption aktueller Projekte ein.</p><p class="plat"><span>Softwareplatformen</span><span>→IOS</span><span>→MAXMSP</span><span>→CSOUND</span><span>→C++</span></p></div></div>
       </div>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <section class="sec w" id="team">
-  <div class="in">
-    <div class="head">
-      <p class="tag">↘ Team</p>
-    </div>
+  <div class="in rail"><h2 class="side">Team</h2><div class="main">
     <ul class="team">
-      <li><h3>Prof. Florian Käppler</h3><p>Master of Fine Arts · CEO · Studiengangsleiter und Professor für Musikdesign an der MH Trossingen</p></li>
-      <li><h3>Ariadna Martín García</h3><p>Managing Lead · Operations, HR and Sound Designer</p></li>
-      <li><h3>Lukas Münter</h3><p>Master of Engineering · Audio Engineer and Immersive Sound Designer</p></li>
-      <li><h3>Valentin Schimpf</h3><p>Interactive Sound Designer</p></li>
-      <li><h3>Alec Dull</h3><p>Bachelor of Music · Audio Experience Designer</p></li>
-      <li><h3>Dominik Rösler</h3><p>Sound Designer</p></li>
-      <li><h3>Nicolas Verspohl</h3><p>Composer</p></li>
-      <li><h3>Vincent Neyses</h3><p>Projektmanagement, Immersive Sound Experience</p></li>
-      <li><h3>Jonathan Schulze</h3><p>Trainee audiovisual media</p></li>
-      <li><h3>Fabio Espejo</h3><p>Trainee audiovisual media</p></li>
-      <li><h3>Vincent Wikström</h3><p>M.A. Musikinformatik, M.A. Komposition · freiberuflicher Projektleiter · Sound Designer, Interaction Designer</p></li>
-      <li><h3>Juergen Swoboda</h3><p>freiberuflicher Tonmeister, Sound Designer · Mastering Engineer · Lehrbeauftragter für Klanggestaltung</p></li>
+      <li><h3>Prof. Florian Käppler</h3><ul class="roles"><li>Master of Fine Arts</li><li>CEO</li><li>Studiengangsleiter und Professor für Musikdesign an der MH Trossingen</li></ul></li>
+      <li><h3>Ariadna Martín García</h3><ul class="roles"><li>Managing Lead</li><li>Operations, HR</li><li>Sound Designerin</li></ul></li>
+      <li><h3>Valentin Schimpf</h3><ul class="roles"><li>Bachelor of Music</li><li>Senior Interactive Sound Designer / Composer</li><li>Creative Technologist</li></ul></li>
+      <li><h3>Alec Dull</h3><ul class="roles"><li>Bachelor of Music</li><li>Audio Experience Designer</li></ul></li>
+      <li><h3>Nicolas Verspohl</h3><ul class="roles"><li>Composer</li></ul></li>
+      <li><h3>Jonathan Schulze</h3><ul class="roles"><li>Trainee audiovisual media</li></ul></li>
+      <li><h3>Fabio Espejo</h3><ul class="roles"><li>Trainee audiovisual media</li></ul></li>
+      <li><h3>Joel Schellhorn</h3><ul class="roles"><li>Immersive Sound Designer</li></ul></li>
+      <li><h3>Juergen Swoboda</h3><ul class="roles"><li>freiberuflicher Tonmeister, Sound Designer</li><li>Mastering Engineer</li><li>Lehrbeauftragter für Klanggestaltung</li></ul></li>
     </ul>
-  </div>
+  </div></div>
 </section>
 
 <section class="sec k" id="kontakt">
-  <div class="in contact">
-    <p class="tag" style="justify-self:start" data-t="contTag">↘ Kontakt</p>
+  <div class="in rail"><h2 class="side" data-t="contTag">Kontakt</h2><div class="main contact">
     <h2 data-t="contH">Hört man das?</h2>
     <div class="pitch">
       <p class="lead" data-t="contP">Schreib uns, wenn deine Marke, dein Raum oder dein Produkt klingen soll.</p>
@@ -341,13 +375,13 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
         <a href="mailto:info@klangerfinder.de">info@klangerfinder.de</a>
       </address>
     </div>
-  </div>
+  </div></div>
 </section>
 
 <footer class="sec k">
   <div class="in">
     <span class="sig"><svg viewBox="-50 -50 1283.2 680.8" role="img" aria-label="Klangerfinder"><path class="mk" fill-rule="evenodd" d="M 42.58 39.3 L 32.02 49.85 L 32.02 51.67 L 17.47 65.87 L 17.47 67.69 L 4.37 80.42 L 4.37 82.24 L 0 85.88 L 0 86.97 L 308.59 394.83 L 308.59 398.11 L 232.9 473.8 L 435.95 474.16 L 436.32 271.11 L 435.59 270.74 L 357.35 349.34 L 355.53 349.34 L 240.9 234.35 L 239.08 234.35 L 44.4 39.3 Z M 199.42 525.84 L 199.42 580.42 L 487.26 580.42 L 487.26 525.84 L 486.9 525.47 L 199.78 525.47 Z"/><path class="nm" fill-rule="evenodd" d="M 1183.20 580.42 L 1028.15 580.42 L 810.08 361.52 L 750.38 421.22 L 750.38 580.42 L 626.00 580.42 L 626.00 0.00 L 750.38 0.00 L 750.38 266.99 L 1016.54 0.00 L 1171.59 0.00 L 887.19 284.41 Z"/></svg></span>
-    <p class="mono meta"><a href="https://www.klangerfinder.de/de/meta/impressum.html" data-t="imp">Impressum</a><a href="https://www.klangerfinder.de/de/meta/datenschutz.html" data-t="dat">Datenschutz</a><span data-t="dummy">Dummy V0.11, nicht freigegeben</span></p>
+    <p class="meta"><a href="https://www.klangerfinder.de/de/meta/impressum.html" data-t="imp">Impressum</a><a href="https://www.klangerfinder.de/de/meta/datenschutz.html" data-t="dat">Datenschutz</a><a href="https://unsplash.com/license" data-t="phot">Platzhalterbilder: Unsplash</a><span data-t="dummy">Dummy V0.21, nicht freigegeben</span></p>
   </div>
 </footer>
 
@@ -366,19 +400,20 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
     xLbl: 'Christmas 2026 · Our game', xTtl: 'Santa needs help.',
     xTxt: 'Santa has lost his jingle. Explore, record sounds and build him a new one.',
     play: 'Start the game', xHint: 'Sound on · Hold your phone sideways',
-    workTag: '↘ Work',
-    servTag: '↘ Services',
-    s0: 'Concept and consulting', s0p: 'Sound concepts, workshops and analyses. We translate brand values into sound.',
-    s1: 'Music', s1p: 'Composition, production and licensing, from digital to symphony orchestra.',
-    s2: 'Sound design', s2p: 'Sound for products, media, interaction and space.',
-    s3: 'Voice', s3p: 'Brand voice, casting, voice direction and recording in many languages.',
-    s4: 'Recording', s4p: 'In the studio and on location, from mono to multichannel.',
-    s5: 'Mixing and mastering', s5p: 'For all common formats, up to wave field synthesis.',
-    s6: 'Software', s6p: 'Audio applications and virtual instruments, built for each project.',
-    contTag: '↘ Contact', contH: 'Can you hear it?',
+    workTag: 'Work',
+    servTag: 'Services',
+    s0: "Conception & Consulting", s0p: "<p>We love to develop sound concepts and ideas for you. We offer musical advice, translate brand values into sound, provide professional support throughout every stage from technical planning to tender offers, we set up artist ensembles, generate acoustical competitive analyses, we offer workshops, develop strategies and set goals, we develop tools for quality assurance and control - also with regard to international rollouts, we furnish expertise, guidance and much more...</p><p>We parent individual projects from inception through conception, content and design creation to final technical implementation. With complex projects we develop ideas, strategies and goals in collaboration with our clients, distill brand values, and translate them into sounds which are specifically tailored for relevant target groups. We value efficient work flow, solid project management and consistent quality assurance.</p>",
+    s1: "Live and Studio Music", s1p: "<p>Music casting and editing, artist research, licensing from Klangerfinder's own archive (2500 tracks), label handling, rights clearance, music composition / any genre, development of innovative genre mixes and crossovers, 60 composers work in-house or via our worldwide network; we offer distillation and arrangement of target group-oriented musical worlds, music production ranging from purely digital programming to instrumental and vocal ensembles and symphony orchestra recordings, creation of scores and single voice recordings, composition and production of modular music for interactive environments, compilation/ research/ booking of live acts / DJs, development and programming of virtual musical instruments.</p>",
+    s2: "On-site and Studio Sound Design", s2p: "<p>Sound recordings with optional foley artist, access to all professional sound and sound design archives worldwide, original sound editing, original sound restoration, extensive and exclusive internal sound and SFX archive, development/ composition/ production of innovative, non-musical sounds for exclusive media productions and product design, development and production of sonic interaction and feedback sounds for interactive environments, development of interactive soundscapes.</p>",
+    s3: "On-site Voice and Studio Recording", s3p: "<p>Voice-over artist casting in any language, booking, licensing, rights clearance handling, dubbing/<wbr>voice-over recording, extensive brand voice castings, voice editing, voice-over direction, restoration of voice recordings, voice recordings in our studios, via ISDN (APTX/ Music Taxi) and live in over 300 partner studios worldwide, own archive of voice actors with over 2000 voice samples, translations in every language (with lip-synching option), voice research.</p>",
+    s4: "On-site and Studio Sound Recordings", s4p: "<p>Recordings range from mono to multichannel (unlimited number of channels) in all current formats, either in our studios or worldwide using mobile technology, with synchronized image, expert teams and in-house developed technology; we provide high-class sound recordings under extreme conditions (e.g. inside of machines and vehicles, at race tracks, under water, nature sound recordings in extreme heights), ultrasound and infrasound recordings, with choice and positioning of the microphones ranging from standard to highly unconventional arrangements, original sound recordings of all kinds on the film set in stereo and in Dolby 5.1 or 7.1.</p>",
+    s5: "On-site and Studio Sound Mixing and Mastering", s5p: "<p>Sound mixing in all formats: mono - stereo - Dolby 5.1 or 7.1 - complex multi-channel mixes, all in our own testing environments, in-house wave-field synthesis mixes with Iosono surround sound system, adaptation and mastering of every mix for the final medium, taking into consideration all current uncompressed or compressed audio formats (particularly .wav, .aiff, .mp3, AAC, AC3, .m4a, DST, .wma, DolbySR, DTS), high-end mastering equipment (Massenburg, Manley, API, D.W. Fearn, Lexikon, Quantec, NEVE, Urei; see section \"Studio Equipment\"). Our mobile systems can act as Timecode Master on site and also run as SMPTE, OSC, MTC, RS232, MMC and LTC slaves.</p>",
+    s6: "Software Development", s6p: "<p>Executing countless projects, we notice time and again that conventional audio technologies currently available on the market quickly reach their limits whenever we need innovative and avant-garde features. This is why we keep developing project-related applications for audio recording, playback and controlling. For example, our constantly growing R&amp;D department was responsible for audio control of the interactive globe presented in the German pavilion at the 2010 Shanghai World Expo, they created the first museum audio guide player to include image tracking as well as numerous virtual software instruments. Their steadily increasing expertise is integrated into the technical conception of our current projects.</p><p class=\"plat\"><span>Software platforms:</span><span>→IOS</span><span>→MAXMSP</span><span>→CSOUND</span><span>→C++</span></p>",
+    contTag: 'Contact', contH: 'Can you hear it?',
     contP: 'Write to us if your brand, your space or your product should have a sound.',
     imp: 'Legal notice', dat: 'Privacy',
-    dummy: 'Dummy V0.11, not approved'
+    phot: 'Placeholder images: Unsplash',
+    dummy: 'Dummy V0.21, not approved'
   };
   var DE = {};
   var nodes = document.querySelectorAll('[data-t]');
@@ -451,6 +486,25 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
   var casesEl = $('cases'), panelsEl = $('cpanels'), chipsEl = $('chips'), cat = 'all', cur = 0, list = [];
   var L = function () { return lang === 'en' ? 1 : 0; };
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  var IMG = {
+    car: ['1719645580984-7bdec515c7ca', 'Nächtliche Autofahrt', 'Driving at night'],
+    light: ['1533144169699-97ec15a75e92', 'Menschen in einer Lichtinstallation', 'People in a light installation'],
+    wall: ['1505299344687-ee45ad431f9b', 'Person vor einer Lichtwand', 'Person in front of a light wall'],
+    neon: ['1768141724350-dcf6e26f31a2', 'Geometrische Neonformen', 'Geometric neon shapes'],
+    gallery: ['1572953109213-3be62398eb95', 'Besucher in einer Gemäldegalerie', 'Visitors in a painting gallery'],
+    statue: ['1544213456-bc37cb97df74', 'Skulpturen in einem Galerieraum', 'Sculptures in a gallery'],
+    vitrine: ['1564399579883-451a5d44ec08', 'Museum mit Vitrinen', 'Museum with display cases'],
+    viewer: ['1606819717115-9159c900370b', 'Besucherin vor Gemälden', 'Visitor in front of paintings'],
+    recorder: ['1786131951421-562134203531', 'Digitaler Audiorekorder', 'Digital audio recorder'],
+    mic: ['1531651008558-ed1740375b39', 'Studiomikrofon', 'Studio microphone'],
+    synth: ['1634286050107-567499885ff9', 'Synthesizer mit Drehreglern', 'Synthesizer with knobs'],
+    studio: ['1760780567530-389d8a3fba75', 'Aufnahmestudio', 'Recording studio']
+  };
+  var CASE_IMG = ['car','car','car','car','car','car','light','synth','wall','neon','light','statue','mic','gallery','viewer','viewer','vitrine','recorder','neon','wall','gallery','viewer','gallery','vitrine','studio','car','car'];
+  function caseImg(x) {
+    var k = CASE_IMG[CASES.indexOf(x)] || 'studio', m = IMG[k], q = '&q=70&auto=format&fit=crop&ar=3:2', u = 'https://images.unsplash.com/photo-' + m[0];
+    return '<figure class="ph"><img src="' + u + '?w=900' + q + '" srcset="' + u + '?w=600' + q + ' 600w, ' + u + '?w=1200' + q + ' 1200w" sizes="(min-width:1000px) 40vw, 100vw" alt="' + esc((lang === 'en' ? 'Placeholder image: ' : 'Platzhalterbild: ') + m[L() + 1]) + '" loading="lazy" decoding="async"></figure>';
+  }
   function catName(id) { for (var k = 0; k < CATS.length; k++) if (CATS[k].id === id) return CATS[k][lang]; return ''; }
   function renderChips() {
     chipsEl.innerHTML = CATS.map(function (c) {
@@ -467,14 +521,13 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
     }).join('');
     panelsEl.innerHTML = list.map(function (x, n) {
       return '<div class="cp" role="tabpanel" id="cp' + n + '" aria-labelledby="ct' + n + '">' +
-        '<p class="mono">Case ' + two(n + 1) + ' / ' + two(list.length) + ' · ' + esc(catName(x.c)) + '</p>' +
+        caseImg(x) + '<div class="cx"><p class="num">' + two(n + 1) + '<span>/' + two(list.length) + '</span></p>' +
         '<h3>' + esc(x.t) + '</h3>' + (x.kd[L()] ? '<p class="kd">' + esc(x.kd[L()]) + '</p>' : '') +
         '<p class="tx">' + esc(x.p ? x.p[L()] : TODO[lang]) + '</p>' +
-        (x.u ? '<a href="' + x.u + '" rel="noopener">↘ ' + esc(x.ul) + '</a>' : '') + '</div>';
+        (x.u ? '<a href="' + x.u + '" rel="noopener">↘ ' + esc(x.ul) + '</a>' : '') + '</div></div>';
     }).join('');
     $('cprev').setAttribute('aria-label', lang === 'en' ? 'Previous case' : 'Vorheriger Case');
     $('cnext').setAttribute('aria-label', lang === 'en' ? 'Next case' : 'Nächster Case');
-    $('chint').textContent = lang === 'en' ? 'Or drag across the strokes' : 'Oder über die Striche wischen';
     show(cur, true);
   }
   function show(i, quiet) {
@@ -563,23 +616,63 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
     themeUi();
   });
 
-  /* ---------- Klang: Platzhalter-Synth, bis die eigenen Sounds da sind ---------- */
-  var AC = null, master = null, noise = null, pending = null;
-  var MODE = [0, 2, 3, 5, 7, 9, 10];
+  /* ---------- Klang: Sinus-Plucks mit Hall, bis die eigenen Sounds da sind ----------
+     Skala D# Pygmy (1, 2, b3, 5, b7), aufsteigend von D#2. Pro Ton ein reiner Sinus-Pluck plus die Oktave darüber,
+     leicht gesättigt, dann trocken plus Raumhall (selbst erzeugte Impulsantwort, etwa 1,5 s). */
+  var AC = null, bus = null, noise = null, pending = null, muted = false;
+  try { muted = localStorage.getItem('fp-snd') === '0'; } catch (e) {}
+  var PYGMY = [0, 2, 3, 7, 10], ROOT = 77.78; /* D#2 */
+  function hz(i) { return ROOT * Math.pow(2, (PYGMY[i % 5] + 12 * Math.floor(i / 5)) / 12); }
+  /* Raum statt Fläche: frühe Reflexionen (links und rechts verschieden), dann ein exponentiell abklingender,
+     nach hinten dunkler werdender Nachhall. rt = Nachhallzeit in Sekunden (-60 dB). */
+  function impulse(a, rt) {
+    var sr = a.sampleRate, len = Math.floor(sr * rt * 1.1), buf = a.createBuffer(2, len, sr);
+    for (var ch = 0; ch < 2; ch++) {
+      var d = buf.getChannelData(ch), lp = 0, er = Math.floor(sr * 0.012);
+      for (var k = 0; k < len; k++) {
+        var tt = k / sr, env = Math.exp(-6.9 * tt / rt) * Math.min(1, k / (sr * 0.03));
+        var x = (Math.random() * 2 - 1) * env * 0.55;
+        lp += (x - lp) * (0.06 + 0.3 * Math.exp(-tt / (rt * 0.35)));
+        d[k] = lp;
+      }
+      for (var r = 0; r < 9; r++) {
+        var at = er + Math.floor(sr * (0.004 + Math.random() * 0.075)), amp = (0.55 - r * 0.045) * (Math.random() < 0.5 ? -1 : 1);
+        if (at < len) d[at] += amp;
+      }
+    }
+    return buf;
+  }
   function ctx() {
     if (AC) return AC;
     var C = window.AudioContext || window.webkitAudioContext;
     if (!C) return null;
     try {
       AC = new C();
-      master = AC.createDynamicsCompressor();
-      master.connect(AC.destination);
-      var len = Math.floor(AC.sampleRate * 0.04), buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0);
-      for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
-      noise = buf;
+      var comp = AC.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 3; comp.attack.value = 0.004; comp.release.value = 0.2;
+      var out = AC.createGain(); out.gain.value = 0.9; comp.connect(out); out.connect(AC.destination);
+      var drive = AC.createGain(); drive.gain.value = 1.6;
+      var sat = AC.createWaveShaper(), curve = new Float32Array(2048), K = 2.2;
+      for (var c = 0; c < 2048; c++) { var x = c / 1023.5 - 1; curve[c] = Math.tanh(K * x) / Math.tanh(K); }
+      sat.curve = curve; sat.oversample = '2x';
+      var dry = AC.createGain(); dry.gain.value = 0.62;
+      var pre = AC.createDelay(0.2); pre.delayTime.value = 0.016;
+      var verb = AC.createConvolver(); verb.buffer = impulse(AC, 1.5);
+      var wet = AC.createGain(); wet.gain.value = 0.36;
+      drive.connect(sat); sat.connect(dry); dry.connect(comp);
+      sat.connect(pre); pre.connect(verb); verb.connect(wet); wet.connect(comp);
+      /* Ping-Pong-Delay für mehr Breite: links 170 ms, rechts 255 ms, wenig Rückkopplung */
+      var dsend = AC.createGain(); dsend.gain.value = 0.22;
+      var merge = AC.createChannelMerger(2), dl = AC.createDelay(1), dr = AC.createDelay(1), fb = AC.createGain(), dlp = AC.createBiquadFilter();
+      dl.delayTime.value = 0.17; dr.delayTime.value = 0.255; fb.gain.value = 0.32; dlp.type = 'lowpass'; dlp.frequency.value = 3200;
+      sat.connect(dsend); dsend.connect(dlp); dlp.connect(dl); dl.connect(dr); dr.connect(fb); fb.connect(dl);
+      dl.connect(merge, 0, 0); dr.connect(merge, 0, 1); merge.connect(comp); merge.connect(pre);
+      bus = drive;
+      var len = Math.floor(AC.sampleRate * 0.09), nb = AC.createBuffer(1, len, AC.sampleRate), nd = nb.getChannelData(0);
+      for (var j = 0; j < len; j++) nd[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / len, 2);
+      noise = nb;
       AC.onstatechange = function () {
-        hintText();
-        if (AC.state === 'running' && pending && performance.now() - pending.t < 400) clack(pending.i);
+        hintText(); sndUi(true);
+        if (AC.state === 'running' && pending && performance.now() - pending.t < 400) clack(pending.i, pending.p);
         pending = null;
       };
     } catch (e) { AC = null; }
@@ -594,24 +687,50 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
   ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'].forEach(function (ev) {
     document.addEventListener(ev, unlock, { passive: true });
   });
-  function clack(i) {
+  /* i = Strich 0..23, p = Fortschritt der Kette 0..1 (öffnet den Filter) */
+  function clack(i, p) {
+    if (muted) return;
+    p = Math.max(0, Math.min(1, p || 0));
     var a = ctx(); if (!a) return;
-    if (a.state !== 'running') { pending = { i: i, t: performance.now() }; a.resume().catch(function () {}); return; }
-    var t = a.currentTime;
-    var semi = MODE[i % 7] + 12 * Math.floor(i / 7), f = 196 * Math.pow(2, semi / 12);
-    var g = a.createGain(), o = a.createOscillator(), o2 = a.createOscillator(), g2 = a.createGain();
-    o.type = 'sine'; o.frequency.setValueAtTime(f * 1.03, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.03);
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.32, t + 0.004);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
-    o2.type = 'sine'; o2.frequency.value = f * 2.76;
-    g2.gain.setValueAtTime(0.12, t); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
-    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
-    o.start(t); o2.start(t); o.stop(t + 0.55); o2.stop(t + 0.15);
-    var n = a.createBufferSource(), bp = a.createBiquadFilter(), gn = a.createGain();
-    n.buffer = noise; bp.type = 'bandpass'; bp.frequency.value = 2400; bp.Q.value = 0.8; gn.gain.value = 0.22;
-    n.connect(bp); bp.connect(gn); gn.connect(master); n.start(t);
+    if (a.state !== 'running') { pending = { i: i, p: p, t: performance.now() }; a.resume().catch(function () {}); return; }
+    var t = a.currentTime + 0.005, f = hz(i), vel = 0.8 + 0.25 * p;
+    var pan = a.createStereoPanner ? a.createStereoPanner() : null;
+    if (pan) { pan.pan.value = (i / 23) * 2 - 1; pan.connect(bus); }
+    var dest = pan || bus, dec = 0.09 + 0.09 * (1 - i / 23);
+    /* reiner Sinus-Pluck: harter Einsatz, kurzer Tonhöhen-Knick, schnelles Abklingen; dazu die Oktave noch kürzer */
+    [[1, 0.28, dec], [2, 0.07, dec * 0.35]].forEach(function (v) {
+      var o = a.createOscillator(), g = a.createGain(); o.type = 'sine';
+      o.frequency.setValueAtTime(f * v[0] * 1.04, t); o.frequency.exponentialRampToValueAtTime(f * v[0], t + 0.01);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(v[1] * vel, t + 0.001);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + v[2]);
+      o.connect(g); g.connect(dest); o.start(t); o.stop(t + v[2] + 0.02);
+    });
   }
+
+
+  /* ---------- Ton-Schalter: gestrichene Pegel, bis der Ton läuft ---------- */
+  var sndBtn = $('snd'), poked = 0;
+  function sndOn() { return !muted && AC && AC.state === 'running'; }
+  function sndUi(fresh) {
+    var on = sndOn();
+    sndBtn.classList.toggle('on', !!on);
+    if (on && fresh) { sndBtn.classList.remove('play'); void sndBtn.offsetWidth; sndBtn.classList.add('play'); }
+    sndBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    sndBtn.setAttribute('aria-label', lang === 'en' ? (on ? 'Sound off' : 'Sound on') : (on ? 'Ton aus' : 'Ton an'));
+    $('sndl').textContent = lang === 'en' ? 'Click for sound' : 'Klick für Ton';
+  }
+  function poke() {
+    var now = performance.now(); if (now - poked < 1200) return; poked = now;
+    sndBtn.classList.remove('nudge'); void sndBtn.offsetWidth; sndBtn.classList.add('nudge');
+  }
+  sndBtn.addEventListener('click', function () {
+    if (sndOn()) muted = true;
+    else { muted = false; unlock(); }
+    try { localStorage.setItem('fp-snd', muted ? '0' : '1'); } catch (e) {}
+    sndUi(true);
+    if (!muted && AC && AC.state === 'running') clack(12, 0.6);
+  });
 
   /* ---------- Dominos ---------- */
   var strip = $('strokes'), cells = [], bars = [], st = [], N = 24, ANGLE = 60, resetT = null;
@@ -627,21 +746,27 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
     if (day) bars[day - 1].classList.add('day');
   })();
   function perRow() { return parseInt(getComputedStyle(strip).getPropertyValue('--n'), 10) || N; }
-  function fall(i, dir, touched) {
+  function runLen(i, dir) { var k = 0; for (var j = i; j >= 0 && j < N && !st[j]; j += dir) k++; return k; }
+  function fall(i, dir, touched, chain) {
     if (i < 0 || i >= N || st[i]) return;
+    if (!chain) chain = { step: 0, len: runLen(i, dir) };
     st[i] = dir;
     var b = bars[i];
     b.classList.remove('up', 'day');
     if (touched) b.classList.add('hit');
     b.style.transformOrigin = dir > 0 ? '100% 100%' : '0 100%';
     void b.offsetWidth;
+    /* zum Ende hin leicht schneller: kürzere Abstände und schnelleres Kippen */
+    var gap = Math.max(36, 132 * Math.pow(0.925, chain.step));
+    b.style.transitionDuration = Math.max(0.16, 0.32 * Math.pow(0.965, chain.step)).toFixed(3) + 's';
     b.classList.add('fall');
     b.style.transform = 'rotate(' + (dir * ANGLE) + 'deg)';
-    clack(i);
+    clack(i, chain.len > 1 ? chain.step / (chain.len - 1) : 0);
     var n = i + dir;
     if (n >= 0 && n < N && !st[n]) {
       var c = perRow(), wrap = Math.floor(n / c) !== Math.floor(i / c);
-      setTimeout(function () { fall(n, dir); }, wrap ? 240 : 85);
+      var next = { step: chain.step + 1, len: chain.len };
+      setTimeout(function () { fall(n, dir, false, next); }, wrap ? gap * 2.4 : gap);
     }
     clearTimeout(resetT);
     resetT = setTimeout(standUp, 2200);
@@ -653,7 +778,7 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
       (function (j, k) {
         setTimeout(function () {
           var b = bars[j];
-          b.classList.remove('fall', 'hit'); b.classList.add('up');
+          b.classList.remove('fall', 'hit'); b.style.transitionDuration = ''; b.classList.add('up');
           b.style.transform = (day && j === day - 1) ? 'rotate(0deg)' : '';
           st[j] = 0;
           setTimeout(function () {
@@ -679,6 +804,7 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
   }
   var lastX = null, lastDir = 1, down = false;
   function nudge(e, tap) {
+    if (!tap && !muted && (!AC || AC.state !== 'running')) poke();
     if (lastX != null && e.clientX !== lastX) lastDir = e.clientX > lastX ? 1 : -1;
     lastX = e.clientX;
     var i = at(e.clientX, e.clientY);
@@ -691,12 +817,14 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
   window.addEventListener('pointercancel', function () { down = false; });
 
   function hintText() {
+    if (!$('hint')) return;
     var on = AC && AC.state === 'running';
     $('hint').innerHTML = lang === 'de'
       ? (on ? '<b>Stups einen Strich an.</b> Der Rest fällt von allein' : '<b>Stups einen Strich an.</b> Ton an: einmal tippen oder klicken')
       : (on ? '<b>Nudge a stroke.</b> The rest will follow' : '<b>Nudge a stroke.</b> Sound on: tap or click once');
   }
   function advText() {
+    if (!$('adv')) return;
     $('adv').textContent = day ? (lang === 'de' ? 'Advent 2026, Tag ' + two(day) + ' von 24' : 'Advent 2026, day ' + two(day) + ' of 24') : '';
   }
 
@@ -707,7 +835,7 @@ footer .meta a{display:inline-flex;align-items:center;min-height:44px;text-under
     document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'); });
     document.title = lang === 'en' ? 'Klangerfinder · We design how brands sound.' : 'Klangerfinder · Wir gestalten, wie Marken klingen.';
     strip.setAttribute('aria-label', lang === 'en' ? '24 strokes that fall like dominoes' : '24 Striche, die wie Dominosteine umfallen');
-    hintText(); advText(); renderChips(); renderWork(); themeUi();
+    hintText(); advText(); renderChips(); renderWork(); themeUi(); sndUi(false);
   }
   document.querySelectorAll('.lang button').forEach(function (b) {
     b.addEventListener('click', function () {
