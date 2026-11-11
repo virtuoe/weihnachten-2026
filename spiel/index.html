@@ -42,6 +42,7 @@ button:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
 .toast { position: fixed; z-index: 4; left: 50%; top: min(24vh, 26%); transform: translateX(-50%); width: max-content; max-width: min(84vw, 900px); white-space: normal; text-align: center; text-transform: none; letter-spacing: .05em; font-weight: 400; line-height: 1.2; padding: 0; border: 0; background: none; color: #fff6e6; font-size: max(27px, calc(var(--u, 3) * 8px)); text-shadow: 0 3px 0 #2b2233, 0 -2px 0 #2b2233, 3px 0 0 #2b2233, -3px 0 0 #2b2233, 2px 2px 0 #2b2233, -2px 2px 0 #2b2233, 2px -2px 0 #2b2233, -2px -2px 0 #2b2233, 0 6px 14px rgba(0, 0, 0, .55); animation: hintin .6s ease-out both; transition: opacity .6s; }
 .toast.off { opacity: 0; }
 body.tc .toast { font-size: max(23px, calc(var(--u, 3) * 8px)); }
+body.tc #prompt, body.tc:not(.inmg) .think, body.tc:not(.inmg) .toast { pointer-events: auto; cursor: pointer; } /* tap the ENTER label to use, tap thoughts and tips to close them */
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; transition: none; } }
 
 
@@ -129,6 +130,16 @@ body.tc .touch { display: flex; }
 .touch[data-ctx="market"] [data-k="use"], .touch[data-ctx="station"] [data-k="use"], .touch[data-ctx="station"] [data-k="sprint"], .touch[data-ctx="station"] [data-k="duck"],
 .touch[data-ctx="enter"] [data-k="sprint"], .touch[data-ctx="enter"] [data-k="jump"], .touch[data-ctx="enter"] [data-k="duck"] { display: none; }
 .touch[data-ctx="dpad"] .acts, .touch[data-ctx="race"] .acts, .touch[data-ctx="lr"] .acts { display: none; }
+/* the joystick (part_b2.js): walking scenes, the market run, the tree climb, the station rooftop and the race. It replaces the arrows,
+   and pulling it past the edge sprints, so the Sprint button goes there too. Tetris, the rhythm game and the church keep the arrows. */
+.stick { display: none; position: relative; width: 158px; height: 158px; touch-action: none; -webkit-user-select: none; user-select: none; }
+.touch[data-ctx="walk"] .stick, .touch[data-ctx="market"] .stick, .touch[data-ctx="lr"] .stick, .touch[data-ctx="race"] .stick { display: block; }
+.touch[data-ctx="walk"] .dpad, .touch[data-ctx="market"] .dpad, .touch[data-ctx="lr"] .dpad, .touch[data-ctx="race"] .dpad { display: none; }
+.touch[data-ctx="walk"] [data-k="sprint"], .touch[data-ctx="market"] [data-k="sprint"] { display: none; }
+.sbase { position: absolute; left: 50%; top: 50%; width: 118px; height: 118px; margin: -59px 0 0 -59px; border-radius: 50%; border: 3px solid var(--fg); background: rgba(43, 34, 51, .45); box-shadow: inset 0 0 0 10px rgba(255, 246, 230, .06); pointer-events: none; }
+.sknob { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; border: 3px solid var(--fg); border-bottom-width: 5px; background: rgba(43, 34, 51, .85); pointer-events: none; transition: background .12s; }
+.stick.on .sknob { background: rgba(126, 200, 255, .55); }
+.stick.run .sbase { border-color: #f3d98a; } .stick.run .sknob { background: #f3d98a; }
 .dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: 4px; }
 .dpad .up { grid-area: 1 / 2; } .dpad .left { grid-area: 2 / 1; } .dpad .right { grid-area: 2 / 3; } .dpad .down { grid-area: 3 / 2; }
 .pad { background: rgba(43, 34, 51, .72); border: 2px solid var(--fg); border-radius: 8px; border-bottom-width: 5px; font-size: 30px; touch-action: none; -webkit-tap-highlight-color: transparent; }
@@ -182,6 +193,10 @@ body.tc .title .mhint { display: block; }
 .pin .ps { background: #3a2a3c; color: #fff6e6; border-radius: 4px; padding: 0 5px 1px; font-size: 17px; letter-spacing: .04em; white-space: nowrap; }
 .pin:hover .pb, .pin:focus-visible .pb { background: #f3d98a; transform: translateY(-2px); }
 .pin.done .pb { background: #b9e3c4; }
+.pin.sel .pb { background: #f3d98a; box-shadow: 0 0 0 3px #c4565f, 0 3px 0 rgba(0,0,0,.35); } /* the place ENTER goes to */
+.derr { font-size: 17px; line-height: 1.25; background: #3a2a3c; color: #ffd0d0; padding: 6px 8px; border-radius: 6px; margin: 0 0 8px; word-break: break-word; user-select: text; -webkit-user-select: text; }
+.mapbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .mapbtns .mb { margin-top: 0; } .mapbtns .mb[disabled] { opacity: .55; cursor: default; }
+@media (pointer: coarse) and (max-height: 520px) { .mapbtns { grid-template-columns: 1fr; gap: 6px; } }
 .pin.done .ps::before { content: "\2713  "; }
 .pin.here .pl { background: #f3d98a; }
 /* studio / daw */
@@ -291,6 +306,7 @@ body.inrace .toast { top: 9vh; }
   .quest .qt { font-size: 14px; margin-bottom: 2px; } .quest .qh { font-size: 20px; } .quest .qs { font-size: 16px; } .quest .qp { margin-top: 3px; }
   .touch { bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
   .dpad { grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 46px); gap: 3px; }
+  .stick { width: 140px; height: 140px; } .sbase { width: 104px; height: 104px; margin: -52px 0 0 -52px; } .sknob { width: 50px; height: 50px; margin: -25px 0 0 -25px; }
   .pad { font-size: 26px; }
   .acts { gap: 6px; } .acts .pad { width: 80px; height: 38px; font-size: 20px; }
   .walkhint { font-size: max(22px, calc(var(--u, 3) * 8px)); top: min(24vh, 26%); }
@@ -310,7 +326,7 @@ body.inrace .toast { top: 9vh; }
   .keys { grid-template-columns: 1fr 1fr; column-gap: 18px; gap: 6px 18px; }
   .keys .kr { grid-template-columns: 92px 1fr; gap: 6px; }
   .mapc { width: min(780px, 100%); grid-template-columns: minmax(0, 1fr) 170px; grid-template-areas: "h h" "m t" "m b"; column-gap: 10px; align-items: start; }
-  .mapc .cardh { grid-area: h; } .mapc .mapbody { grid-area: m; width: min(100%, calc((100vh - 84px) * 1.655)); } .mapc #maphint { grid-area: t; } .mapc #mapx { grid-area: b; align-self: end; }
+  .mapc .cardh { grid-area: h; } .mapc .mapbody { grid-area: m; width: min(100%, calc((100vh - 84px) * 1.655)); } .mapc #maphint { grid-area: t; } .mapc .mapbtns { grid-area: b; align-self: end; }
   body:has(#rec:not([hidden])) .quest { display: none; }
 }
 </style>
@@ -336,6 +352,7 @@ body.inrace .toast { top: 9vh; }
 <div id="dp" class="mp" hidden>
   <div class="mc" role="dialog" aria-modal="true" aria-labelledby="dpt">
     <h2 id="dpt" class="mtt"></h2>
+    <p id="derr" class="derr" hidden></p>
     <div id="dlist" class="dlist"></div>
     <button id="dback" class="mb prim" type="button"></button>
   </div>
@@ -359,10 +376,10 @@ body.inrace .toast { top: 9vh; }
       <div class="cardh"><h2 data-i="tHow">Instructions</h2></div>
       <p data-i="tGoal"></p>
       <div class="keys">
-        <div class="kr"><div><span class="kb"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <kbd>&larr;&uarr;&darr;&rarr;</kbd></span><span class="tcb"><kbd>&#9664; &#9650; &#9660; &#9654;</kbd></span></div><div class="kd"><b data-i="kWalk"></b><span class="kbn" data-i="kWalkN"></span></div></div>
+        <div class="kr"><div><span class="kb"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <kbd>&larr;&uarr;&darr;&rarr;</kbd></span><span class="tcb"><kbd data-i="kStick">Joystick</kbd></span></div><div class="kd"><b data-i="kWalk"></b><span class="kbn" data-i="kWalkN"></span></div></div>
         <div class="kr"><div><kbd>ENTER</kbd></div><div class="kd"><b data-i="kUse"></b><span data-i="kUseN"></span></div></div>
         <div class="kr"><div><span class="kb"><kbd>SPACE</kbd></span><span class="tcb"><kbd data-i="bJump"></kbd></span></div><div class="kd"><b data-i="kJump"></b><span data-i="kJumpN"></span></div></div>
-        <div class="kr"><div><span class="kb"><kbd>SHIFT</kbd></span><span class="tcb"><kbd data-i="bSprint"></kbd></span></div><div class="kd"><b data-i="kSprint"></b><span data-i="kSprintN"></span></div></div>
+        <div class="kr"><div><span class="kb"><kbd>SHIFT</kbd></span><span class="tcb"><kbd data-i="kStickRun">Joystick to the edge</kbd></span></div><div class="kd"><b data-i="kSprint"></b><span data-i="kSprintN"></span></div></div>
         <div class="kr"><div><span class="kb"><kbd>CMD</kbd> / <kbd>C</kbd></span><span class="tcb"><kbd data-i="bDuck"></kbd></span></div><div class="kd"><b data-i="kDuck"></b><span data-i="kDuckN"></span></div></div>
         <div class="kr"><div><span class="kb"><kbd>ESC</kbd></span><span class="tcb"><kbd>&#9776;</kbd></span></div><div class="kd"><b data-i="menu"></b><span data-i="kMenuN"></span></div></div>
       </div>
@@ -375,7 +392,7 @@ body.inrace .toast { top: 9vh; }
     <div class="cardh"><h2 id="mapt" data-i="mapT">Map</h2><span class="pill" id="mapn"></span></div>
     <div class="mapbody" id="mapbody"><canvas id="mapcv" width="192" height="116"></canvas></div>
     <p id="maphint"></p>
-    <button id="mapx" class="mb" type="button" data-i="mClose">Close</button>
+    <div class="mapbtns"><button id="mapgo" class="mb prim" type="button" disabled></button><button id="mapx" class="mb" type="button" data-i="mClose">Close</button></div>
   </div>
 </div>
 <div id="dawov" class="ov" hidden>
@@ -424,6 +441,7 @@ body.inrace .toast { top: 9vh; }
 </div>
 <div id="rotate" class="rotate" role="alert"><div class="ico" aria-hidden="true"></div><div data-i="rRot"></div><div class="rs" data-i="rSnd"></div></div>
 <div class="touch" id="touch">
+  <div class="stick" id="stick" aria-label="Joystick"><div class="sbase"></div><div class="sknob" id="sknob"></div></div>
   <div class="dpad">
     <button class="pad up" type="button" data-k="up" aria-label="Up">&#9650;</button>
     <button class="pad left" type="button" data-k="left" aria-label="Left">&#9664;</button>
@@ -1127,7 +1145,7 @@ function padCtx() {
 let padCtxNow = '';
 /* pick the keyboard or the touch wording of a hint */
 const kt = (kb, tc) => touchMode ? tc : kb;
-function padTick() { const c = padCtx(); if (c === padCtxNow) return; padCtxNow = c; $('touch').dataset.ctx = c; for (const k in TC) TC[k] = false; syncPads(); }
+function padTick() { const c = padCtx(); if (c === padCtxNow) return; padCtxNow = c; $('touch').dataset.ctx = c; for (const k in TC) TC[k] = false; if (typeof stickReset === 'function' && stk) stickReset(); syncPads(); }
 pads.forEach(b => {
   const k = b.dataset.k;
   b.addEventListener('pointerdown', e => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (x) {} if (k === 'jump' && !TC.jump) { p.buf = 0.12; if (dlgOpen()) onUse(); } if (k === 'use') onUse(); TC[k] = true; syncPads(); });
@@ -1135,6 +1153,32 @@ pads.forEach(b => {
   b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
   b.addEventListener('contextmenu', e => e.preventDefault());
 });
+/* ---------- the joystick (touch mode): direction from the knob, sprint when pulled past the edge ---------- */
+const stickEl = $('stick'), knobEl = $('sknob'), STICK_KEYS = ['left', 'right', 'up', 'down', 'sprint'];
+let stk = null, stkDir = null;
+function stickReset() { stk = null; stkDir = null; knobEl.style.transform = ''; stickEl.classList.remove('on', 'run'); for (const k of STICK_KEYS) TC[k] = false; syncPads(); }
+function stickMove(e) {
+  const dx = e.clientX - stk.cx, dy = e.clientY - stk.cy, d = Math.hypot(dx, dy), R = stk.R, k = Math.min(d, R) / (d || 1);
+  knobEl.style.transform = 'translate(' + Math.round(dx * k) + 'px,' + Math.round(dy * k) + 'px)';
+  const c = padCtxNow, on = d > R * 0.28, ux = dx / (d || 1), uy = dy / (d || 1);
+  const H = c === 'walk' ? 0.38 : 0.3, vert = c === 'walk' || c === 'race', V = c === 'race' ? 0.55 : 0.38;
+  TC.left = on && ux < -H; TC.right = on && ux > H;
+  TC.up = on && vert && uy < -V; TC.down = on && vert && uy > V;
+  TC.sprint = (c === 'walk' || c === 'market') && d > R * 1.08; // pulled past the edge of the circle
+  stickEl.classList.toggle('on', on); stickEl.classList.toggle('run', TC.sprint);
+  // the main direction, for the Konami code (a new push from the middle counts as a new press)
+  const dir = !on ? null : Math.abs(ux) > Math.abs(uy) ? (ux < 0 ? 'left' : 'right') : (uy < 0 ? 'up' : 'down');
+  if (dir && dir !== stkDir) konamiStep(dir); stkDir = dir;
+  syncPads();
+}
+stickEl.addEventListener('pointerdown', e => {
+  e.preventDefault(); try { stickEl.setPointerCapture(e.pointerId); } catch (x) {}
+  const r = stickEl.querySelector('.sbase').getBoundingClientRect();
+  stk = { id: e.pointerId, cx: r.left + r.width / 2, cy: r.top + r.height / 2, R: r.width / 2 }; stickMove(e);
+});
+stickEl.addEventListener('pointermove', e => { if (stk && e.pointerId === stk.id) stickMove(e); });
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => stickEl.addEventListener(t, e => { if (stk && e.pointerId === stk.id) stickReset(); }));
+stickEl.addEventListener('contextmenu', e => e.preventDefault());
 function toggleHB() { showHB = !showHB; }
 
 /* ---------- player update ---------- */
@@ -2023,8 +2067,8 @@ const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)'
 let lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
 try { const s = localStorage.getItem('fp-lang'); if (s === 'en' || s === 'de') lang = s; } catch (e) {}
 const UI = {
-  en: { iCar: 'Car key', arcQuit: 'Back to the arcade', arcFail: 'This game could not start on this device. Try another browser or a computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Leave', arcBack: 'Back to the menu', rRot: 'Please turn your phone sideways', rSnd: 'And turn the sound up, so you can hear the game!', tMob: 'Play with your phone sideways and turn the sound up! On an iPhone, also switch off silent mode.', hWalkKb: 'Walk with WASD or the arrow keys', hWalkTc: 'Walk with the arrow buttons', sub: 'A tiny Christmas adventure', goalLbl: 'Goal', ctlLbl: 'Controls', kWalk: 'Walk', kWalkN: 'or arrow keys', kUse: 'Use', kUseN: 'talk, open, pet. Tap the text box too.', kJump: 'Jump', kJumpN: 'hold for higher', kDuck: 'Duck', kDuckN: 'hold', menu: 'Menu', mFs: 'Fullscreen', mRestart: 'Restart game', rAsk: 'Start over from the beginning? Your progress will be lost.', rYes: 'Yes, restart', rNo: 'Cancel', mResume: 'Resume', mSndT: 'Sound', mLangT: 'Language', mOn: 'on', mOff: 'off', bJump: 'Jump', bDuck: 'Duck', bSprint: 'Sprint', next: 'ENTER: next', alt: 'A top-down pixel garden in greyscale with an office, a chicken pen and a front gate.' },
-  de: { iCar: 'Autoschlüssel', arcQuit: 'Zurück zur Arcade', arcFail: 'Dieses Spiel konnte auf diesem Gerät nicht starten. Probier einen anderen Browser oder einen Computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Verlassen', arcBack: 'Zurück zum Menü', rRot: 'Bitte dreh dein Handy ins Querformat', rSnd: 'Und mach den Ton laut, damit du das Spiel hörst!', tMob: 'Spiel mit dem Handy im Querformat und mach den Ton laut! Am iPhone auch den Stummmodus ausschalten.', hWalkKb: 'Laufen mit WASD oder den Pfeiltasten', hWalkTc: 'Laufen mit den Pfeilen unten', sub: 'Ein kleines Weihnachtsabenteuer', goalLbl: 'Ziel', ctlLbl: 'Steuerung', kWalk: 'Laufen', kWalkN: 'oder Pfeiltasten', kUse: 'Benutzen', kUseN: 'reden, öffnen, streicheln. Auch auf die Textbox tippen.', kJump: 'Springen', kJumpN: 'gedrückt halten für höher', kDuck: 'Ducken', kDuckN: 'gedrückt halten', menu: 'Menü', mFs: 'Vollbild', mRestart: 'Spiel neu starten', rAsk: 'Ganz von vorn anfangen? Dein Fortschritt geht verloren.', rYes: 'Ja, neu starten', rNo: 'Abbrechen', mResume: 'Weiterspielen', mSndT: 'Ton', mLangT: 'Sprache', mOn: 'an', mOff: 'aus', bJump: 'Sprung', bDuck: 'Ducken', bSprint: 'Rennen', next: 'ENTER: weiter', alt: 'Ein Pixelgarten in Graustufen von oben mit Büro, Hühnerstall und Gartentor.' }
+  en: { kStick: 'Joystick', kStickRun: 'Joystick to the edge', iCar: 'Car key', arcQuit: 'Back to the arcade', arcFail: 'This game could not start on this device. Try another browser or a computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Leave', arcBack: 'Back to the menu', rRot: 'Please turn your phone sideways', rSnd: 'And turn the sound up, so you can hear the game!', tMob: 'Play with your phone sideways and turn the sound up! On an iPhone, also switch off silent mode.', hWalkKb: 'Walk with WASD or the arrow keys', hWalkTc: 'Walk with the joystick', sub: 'A tiny Christmas adventure', goalLbl: 'Goal', ctlLbl: 'Controls', kWalk: 'Walk', kWalkN: 'or arrow keys', kUse: 'Use', kUseN: 'talk, open, pet. Tap the text box too.', kJump: 'Jump', kJumpN: 'hold for higher', kDuck: 'Duck', kDuckN: 'hold', menu: 'Menu', mFs: 'Fullscreen', mRestart: 'Restart game', rAsk: 'Start over from the beginning? Your progress will be lost.', rYes: 'Yes, restart', rNo: 'Cancel', mResume: 'Resume', mSndT: 'Sound', mLangT: 'Language', mOn: 'on', mOff: 'off', bJump: 'Jump', bDuck: 'Duck', bSprint: 'Sprint', next: 'ENTER: next', alt: 'A top-down pixel garden in greyscale with an office, a chicken pen and a front gate.' },
+  de: { kStick: 'Joystick', kStickRun: 'Joystick bis zum Rand', iCar: 'Autoschlüssel', arcQuit: 'Zurück zur Arcade', arcFail: 'Dieses Spiel konnte auf diesem Gerät nicht starten. Probier einen anderen Browser oder einen Computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Verlassen', arcBack: 'Zurück zum Menü', rRot: 'Bitte dreh dein Handy ins Querformat', rSnd: 'Und mach den Ton laut, damit du das Spiel hörst!', tMob: 'Spiel mit dem Handy im Querformat und mach den Ton laut! Am iPhone auch den Stummmodus ausschalten.', hWalkKb: 'Laufen mit WASD oder den Pfeiltasten', hWalkTc: 'Laufen mit dem Joystick', sub: 'Ein kleines Weihnachtsabenteuer', goalLbl: 'Ziel', ctlLbl: 'Steuerung', kWalk: 'Laufen', kWalkN: 'oder Pfeiltasten', kUse: 'Benutzen', kUseN: 'reden, öffnen, streicheln. Auch auf die Textbox tippen.', kJump: 'Springen', kJumpN: 'gedrückt halten für höher', kDuck: 'Ducken', kDuckN: 'gedrückt halten', menu: 'Menü', mFs: 'Vollbild', mRestart: 'Spiel neu starten', rAsk: 'Ganz von vorn anfangen? Dein Fortschritt geht verloren.', rYes: 'Ja, neu starten', rNo: 'Abbrechen', mResume: 'Weiterspielen', mSndT: 'Ton', mLangT: 'Sprache', mOn: 'an', mOff: 'aus', bJump: 'Sprung', bDuck: 'Ducken', bSprint: 'Rennen', next: 'ENTER: weiter', alt: 'Ein Pixelgarten in Graustufen von oben mit Büro, Hühnerstall und Gartentor.' }
 };
 const NAMES = {
   florian: { en: 'Florian', de: 'Florian' }, ari: { en: 'Ari', de: 'Ari' }, valentin: { en: 'Valentin', de: 'Valentin' }, jonathan: { en: 'Jonathan', de: 'Jonathan' },
@@ -2166,7 +2210,7 @@ function questInfo() {
   if (st === 6) return { k: 'q3', h: { en: 'Go into the office', de: 'Geh ins Büro' }, s: { en: '', de: '' } };
   if (st === 7 && story.mg) { const mq = missionQuest(); if (mq) return Object.assign(mq, { n: recCount(), on: recFlags(), max: 4, cols: REC_COLS }); }
   if (st === 7) return { k: 'q5' + story.place, n: recCount(), on: recFlags(), max: 4, cols: REC_COLS, h: { en: 'Record four sounds', de: 'Nimm vier Klänge auf' }, s: placeHint() };
-  if (st === 8.5) return { k: 'q6r', h: { en: 'Race back to the office', de: 'Rase zurück ins Büro' }, s: kt({ en: 'LEFT / RIGHT steers. UP boosts, DOWN brakes. Dodge the traffic!', de: 'LINKS / RECHTS lenkt. HOCH gibt Gas, RUNTER bremst. Weich dem Verkehr aus!' }, { en: '◀ / ▶ steer. ▲ boosts, ▼ brakes. Dodge the traffic!', de: '◀ / ▶ lenkt. ▲ gibt Gas, ▼ bremst. Weich dem Verkehr aus!' }) };
+  if (st === 8.5) return { k: 'q6r', h: { en: 'Race back to the office', de: 'Rase zurück ins Büro' }, s: kt({ en: 'LEFT / RIGHT steers. UP boosts, DOWN brakes. Dodge the traffic!', de: 'LINKS / RECHTS lenkt. HOCH gibt Gas, RUNTER bremst. Weich dem Verkehr aus!' }, { en: 'Steer with the joystick. Push up to boost, pull down to brake. Dodge the traffic!', de: 'Lenk mit dem Joystick. Nach oben gibt Gas, nach unten bremst. Weich dem Verkehr aus!' }) };
   if (st === 9) return { k: 'q6', h: { en: 'Make the jingle', de: 'Bau den Jingle' }, s: { en: 'Turn on the PC and arrange your four sounds. Then export.', de: 'Schalte den PC ein und ordne deine vier Klänge an. Dann exportiere.' } };
   return null;
 }
@@ -2426,7 +2470,7 @@ function updateActors(dt) {
     n.flee -= dt; n.fcd -= dt;
     n.hint = cur.name === 'garden' && CL.length < MAX_CARRY && !dlg.open && story.stage >= 2 && (story.stage === 4 || !n.petted) && Math.hypot(p.x - n.x, p.y - n.y) < 60;
     const fr = n.mode === 'creep' ? (p.duck ? 0 : 55) : n.mode === 'chase' ? 60 : (p.duck ? 11 : 27);
-    if (story.stage === 4 && p.moving && n.fcd <= 0 && !(n.freeze > 0) && fr > 0 && Math.hypot(n.x - p.x, n.y - (p.y - 4)) < fr) { if (fleeFrom(n) && n.mode) n.fcd = 0.25; if (n.mode !== 'creep') tip('flee', kt({ en: 'Hold SHIFT to sprint after the hen.', de: 'Halte SHIFT, um dem Huhn hinterherzusprinten.' }, { en: 'Hold SPRINT to sprint after the hen.', de: 'Halte RENNEN, um dem Huhn hinterherzusprinten.' }), 6); }
+    if (story.stage === 4 && p.moving && n.fcd <= 0 && !(n.freeze > 0) && fr > 0 && Math.hypot(n.x - p.x, n.y - (p.y - 4)) < fr) { if (fleeFrom(n) && n.mode) n.fcd = 0.25; if (n.mode !== 'creep') tip('flee', kt({ en: 'Hold SHIFT to sprint after the hen.', de: 'Halte SHIFT, um dem Huhn hinterherzusprinten.' }, { en: 'Pull the joystick to the edge to sprint after the hen.', de: 'Zieh den Joystick bis zum Rand, um dem Huhn hinterherzusprinten.' }), 6); }
     if (story.stage === 4 && n.mode === 'creep' && Math.hypot(n.x - p.x, n.y - p.y) < 80) tip('creep', kt({ en: 'Hold CMD / C to creep up quietly.', de: 'Halte CMD / C, um dich leise anzuschleichen.' }, { en: 'Hold DUCK to creep up quietly.', de: 'Halte DUCKEN, um dich leise anzuschleichen.' }), 6);
     if (n.freeze > 0) { n.freeze -= dt; n.pecking = false; continue; }
     if (n.tx == null) {
@@ -2664,16 +2708,38 @@ $('dp').addEventListener('click', e => { if (e.target === $('dp')) setDev(false)
 window.addEventListener('keydown', e => { if ((e.key === '+' || e.code === 'NumpadAdd') && !e.repeat && story.started && !e.ctrlKey && !e.metaKey) { e.preventDefault(); devUnlock(); if (!$('dp').hidden) { $('dp').hidden = true; setMenu(false); } else { if (!menuOpen) setMenu(true); setDev(true); } } });
 try { if (/[#&]dev\b/.test(location.hash)) devUnlock(); } catch (x) {}
 /* the developer menu on phones too: the Konami code  up up down down left right left right JUMP ENTER  (touch buttons or keyboard) */
-{ const SEQ = 'up,up,down,down,left,right,left,right,jump,use'; let last = [];
-  const step = k => {
-    if (!story.started) return;
-    last.push(k); if (last.length > 10) last.shift();
-    if (last.join(',') === SEQ) { last = []; devUnlock(); setTimeout(() => { if (!menuOpen) setMenu(true); setDev(true); }, 250); } // after the key or tap, so ENTER does not click the first entry
-  };
-  window.addEventListener('keydown', e => { const k = CODES[e.code]; if (k && !e.repeat) step(k); }, true);
-  pads.forEach(b => b.addEventListener('pointerdown', () => step(b.dataset.k)));
+let konamiLast = [];
+function konamiStep(k) {
+  if (!story.started) return;
+  konamiLast.push(k); if (konamiLast.length > 10) konamiLast.shift();
+  if (konamiLast.join(',') === 'up,up,down,down,left,right,left,right,jump,use') { konamiLast = []; devUnlock(); setTimeout(() => { if (!menuOpen) setMenu(true); setDev(true); }, 250); } // after the key or tap, so ENTER does not click the first entry
 }
+window.addEventListener('keydown', e => { const k = CODES[e.code]; if (k && !e.repeat) konamiStep(k); }, true);
+pads.forEach(b => b.addEventListener('pointerdown', () => konamiStep(b.dataset.k)));
 
+
+/* ---------- touch: tap things instead of pressing ENTER ----------
+   A tap on an object within reach uses it (hens, doors, the computer, the map board, bench, hammock, garage, arcade, car...).
+   A tap anywhere also moves dialogue on, skips the arrival cutscene and gets you up from the bench or hammock.
+   The "ENTER · ..." label itself can be tapped too; thought bubbles and tips close when tapped. */
+cv.addEventListener('pointerdown', e => {
+  if (!touchMode || story.mg || ovOpen || menuOpen || story.fadeDir !== 0) return;
+  if (dlg.open) { e.preventDefault(); advance(); return; }
+  if (story.cut || p.rest) { e.preventDefault(); onUse(); return; }
+  const rc = cv.getBoundingClientRect(), sc = cv.clientWidth / VW, wx = (e.clientX - rc.left) / sc + view.cx, wy = (e.clientY - rc.top) / sc + view.cy;
+  let best = null, bd = 1e9;
+  for (const it of interact) {
+    if (!enabled(it)) continue;
+    const q = ipos(it), d = Math.hypot(wx - q.x, wy - q.y), hit = Math.max(16, Math.min(28, it.r));
+    if (d < hit && d < bd) { bd = d; best = it; }
+  }
+  if (!best) return;
+  const q = ipos(best);
+  if (Math.hypot(p.x - q.x, (p.y - 4) - q.y) < best.r + 4) { e.preventDefault(); near = best; onUse(); }
+});
+$('prompt').addEventListener('pointerdown', e => { e.preventDefault(); onUse(); });
+$('think').addEventListener('pointerdown', e => { e.preventDefault(); story.think = 0; });
+$('toast').addEventListener('pointerdown', e => { e.preventDefault(); $('toast').hidden = true; });
 /* =====================================================================
    The second half of the adventure: title screen, the map, four places
    to record, the studio and the ending.
@@ -2773,7 +2839,7 @@ function missionQuest() {
   if (m.hj) {
     if (ph === 'play') return Q('hj', { en: 'Climb the tree to record the bird', de: 'Kletter auf den Baum zum Vogel' },
       { en: 'Follow the singing bird to the top. The branches bounce you up, LEFT/RIGHT steers. Lanterns are checkpoints.', de: 'Folge dem singenden Vogel nach oben. Die Äste lassen dich hüpfen, LINKS/RECHTS lenkt. Laternen sind Kontrollpunkte.' },
-      { en: 'Follow the singing bird to the top. The branches bounce you up, the arrow buttons steer. Lanterns are checkpoints.', de: 'Folge dem singenden Vogel nach oben. Die Äste lassen dich hüpfen, die Pfeile lenken. Laternen sind Kontrollpunkte.' });
+      { en: 'Follow the singing bird to the top. The branches bounce you up, the joystick steers. Lanterns are checkpoints.', de: 'Folge dem singenden Vogel nach oben. Die Äste lassen dich hüpfen, der Joystick lenkt. Laternen sind Kontrollpunkte.' });
     return Q('hj2', { en: 'Record the bird song', de: 'Nimm den Vogelgesang auf' }, { en: 'Hold still, the bird is singing.', de: 'Halt still, der Vogel singt.' });
   }
   if (m.rc) return null;
@@ -3095,7 +3161,15 @@ function buildPins() {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'pin'; b.dataset.k = pl.k; b.style.left = (pl.x / 192 * 100) + '%'; b.style.top = (pl.y / 116 * 100) + '%';
     const pb = document.createElement('span'); pb.className = 'pb'; pb.appendChild(pixIcon(pl.ic)); const l = document.createElement('span'); l.className = 'pl'; const s = document.createElement('span'); s.className = 'ps';
     b.append(pb, l, s); b.addEventListener('click', () => gotoPlace(pl.k)); body.appendChild(b);
+    b.addEventListener('pointerdown', () => { mapSelect(pl.k); try { b.focus({ preventScroll: true }); } catch (e) {} }); b.addEventListener('focus', () => mapSelect(pl.k));
   });
+}
+/* the ENTER button on the map goes to the selected place (a tap or focus on a pin selects it) */
+let mapSel = null;
+function mapSelect(k) {
+  mapSel = k; document.querySelectorAll('#mapbody .pin').forEach(b => b.classList.toggle('sel', b.dataset.k === k));
+  const pl = PLACES.find(x => x.k === k), go = $('mapgo');
+  go.disabled = !pl; go.textContent = 'ENTER · ' + (pl ? tr(pl.n) : tr({ en: 'Choose a place', de: 'Wähle einen Ort' }));
 }
 function mapRefresh() {
   $('mapn').textContent = tr({ en: 'Sounds', de: 'Klänge' }) + ' ' + recCount() + '/4';
@@ -3110,6 +3184,7 @@ function mapRefresh() {
 function openMap() {
   if (ovOpen || story.fadeDir !== 0) return;
   mapRefresh(); $('mapov').hidden = false; setOv('map');
+  { const f = document.querySelector('#mapbody .pin:not(.done)'); mapSelect(f ? f.dataset.k : null); }
   focusSoon(document.querySelector('#mapbody .pin:not(.done)') || $('mapx'));
 }
 function closeMap() { $('mapov').hidden = true; setOv(null); prev = performance.now(); }
@@ -3254,6 +3329,8 @@ function initUI() {
   $('tsnd').addEventListener('click', () => { snd = !snd; try { localStorage.setItem('fp-snd', snd ? '1' : '0'); } catch (x) {} sndLabel(); if (snd) tone(523.25, 0.3, 'sine', 0.1); extraLang(); });
   $('snd').addEventListener('click', () => { extraLang(); });
   $('mapx').addEventListener('click', closeMap);
+  $('mapov').addEventListener('click', e => { if (e.target === $('mapov')) closeMap(); }); // a tap on the dark area around the map closes it
+  $('mapgo').addEventListener('click', () => { if (mapSel) gotoPlace(mapSel); });
   $('mmap').addEventListener('click', () => { setMenu(false); setTimeout(openMap, 0); });
   $('dplay').addEventListener('click', dawPlay); $('dclear').addEventListener('click', () => { daw.grid.forEach(r => r.fill(false)); dawRefresh(); });
   $('dclose').addEventListener('click', () => { if (!daw.busy) closeDaw(); }); $('dexp').addEventListener('click', startExport); $('dgo').addEventListener('click', finishStudio);
@@ -4942,7 +5019,7 @@ function rcStart() {
   const fl = []; for (let i = 0; i < 70; i++) fl.push({ a: rcH(i * 3 + 1) * 6.2832, r: rcH(i * 5 + 2) * 240, v: 0.7 + rcH(i * 7 + 3) * 0.8 });
   story.mg = { rc: true, phase: 'count', cd: 3.7, t: 0, dist: 0, speed: 0, px: -0.5, steer: 0, cars: rcMakeCars(RCT), fl, parts: [], shake: 0, crash: 0, cr: 0, bgx: 0, boostK: 0, finT: 0, lastNm: -1, au: null, mt: 0, ms: 0, say3: 4, goT: 0, hintT: 0 };
   rcAudioStart(story.mg);
-  toast(tr(kt({ en: 'Back to the office! LEFT / RIGHT steers, UP boosts, DOWN brakes.', de: 'Zurück ins Büro! LINKS / RECHTS lenkt, HOCH gibt Gas, RUNTER bremst.' }, { en: 'Back to the office! ◀ / ▶ steer, ▲ boosts, ▼ brakes.', de: 'Zurück ins Büro! ◀ / ▶ lenkt, ▲ gibt Gas, ▼ bremst.' })), 3.4);
+  toast(tr(kt({ en: 'Back to the office! LEFT / RIGHT steers, UP boosts, DOWN brakes.', de: 'Zurück ins Büro! LINKS / RECHTS lenkt, HOCH gibt Gas, RUNTER bremst.' }, { en: 'Back to the office! Joystick steers, up boosts, down brakes.', de: 'Zurück ins Büro! Joystick lenkt, oben gibt Gas, unten bremst.' })), 3.4);
 }
 function rcAudioStart(m) {
   try {
@@ -5569,17 +5646,30 @@ enterMap('garden', maps.garden.start);
 p.hide = true; p.clipX = null; story.fade = 1; story.fadeDir = -1;
 size(); applyLang();
 let prev = performance.now();
+/* errors never stop the game: the next frame is booked first and each frame is caught.
+   The last error is kept for the developer menu (Konami code), so a problem on a phone can be read off and reported. */
+let errLast = '', errN = 0;
+function noteErr(err) {
+  errN++; const m = (err && (err.message || err.reason && err.reason.message || String(err))) || 'unknown error';
+  const st = err && (err.stack || err.reason && err.reason.stack) ? String(err.stack || err.reason.stack).split('\n').slice(0, 3).join(' | ') : '';
+  errLast = m + (st ? ' | ' + st : ''); try { console.error('[game]', errLast); } catch (e) {}
+  const el = $('derr'); if (el) { el.hidden = false; el.textContent = tr({ en: 'Last error', de: 'Letzter Fehler' }) + ' (' + errN + '): ' + errLast; }
+}
+window.addEventListener('error', e => noteErr(e.error || e.message));
+window.addEventListener('unhandledrejection', e => noteErr(e.reason));
 function frame(now) {
-  padTick();
-  const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
-  const away = PORT && PORT.matches;
-  document.body.classList.toggle('inmg', !!story.mg);
-  document.body.classList.toggle('inrose', !!(story.mg && (story.mg.rw || story.mg.hj)));
-  document.body.classList.toggle('inrace', !!(story.mg && story.mg.rc));
-  if (story.mg) { if (!menuOpen && !ovOpen && !away) mgUpdate(dt); useEdge = false; if (story.mg) { mgRender(); setQuest(); } placePrompt(); placeDlg(); }
-  else { if (!menuOpen && !ovOpen && !away) update(dt);
-  render(); placePrompt(); placeDlg(); }
   requestAnimationFrame(frame);
+  try {
+    padTick();
+    const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+    const away = PORT && PORT.matches;
+    document.body.classList.toggle('inmg', !!story.mg);
+    document.body.classList.toggle('inrose', !!(story.mg && (story.mg.rw || story.mg.hj)));
+    document.body.classList.toggle('inrace', !!(story.mg && story.mg.rc));
+    if (story.mg) { if (!menuOpen && !ovOpen && !away) mgUpdate(dt); useEdge = false; if (story.mg) { mgRender(); setQuest(); } placePrompt(); placeDlg(); }
+    else { if (!menuOpen && !ovOpen && !away) update(dt);
+    render(); placePrompt(); placeDlg(); }
+  } catch (err) { noteErr(err); prev = performance.now(); }
 }
 initUI();
 roseBoot();
