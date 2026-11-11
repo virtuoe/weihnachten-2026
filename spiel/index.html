@@ -120,7 +120,7 @@ body.tc #prompt, body.tc:not(.inmg) .think, body.tc:not(.inmg) .toast { pointer-
 @media (prefers-reduced-motion: reduce) { .lvlb.go { animation: none; opacity: 1; } }
 
 /* on-screen controls, shown on touch devices */
-.touch { display: none; position: fixed; z-index: 4; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); justify-content: space-between; align-items: flex-end; gap: 16px; user-select: none; -webkit-user-select: none; touch-action: none; pointer-events: none; }
+.touch { display: none; position: fixed; z-index: 4; left: max(36px, calc(env(safe-area-inset-left, 0px) + 16px)); right: max(36px, calc(env(safe-area-inset-right, 0px) + 16px)); bottom: max(30px, calc(env(safe-area-inset-bottom, 0px) + 14px)); /* up and in from the edges, easier to reach */ justify-content: space-between; align-items: flex-end; gap: 16px; user-select: none; -webkit-user-select: none; touch-action: none; pointer-events: none; }
 .touch > * { pointer-events: auto; }
 /* body.tc = touch mode (set in JS from the device, then from what the player actually uses) */
 body.tc .touch { display: flex; }
@@ -132,20 +132,20 @@ body.tc .touch { display: flex; }
 .touch[data-ctx="dpad"] .acts, .touch[data-ctx="race"] .acts, .touch[data-ctx="lr"] .acts { display: none; }
 /* the joystick (part_b2.js): walking scenes, the market run, the tree climb, the station rooftop and the race. It replaces the arrows,
    and pulling it past the edge sprints, so the Sprint button goes there too. Tetris, the rhythm game and the church keep the arrows. */
-.stick { display: none; position: relative; width: 158px; height: 158px; touch-action: none; -webkit-user-select: none; user-select: none; }
+.stick { display: none; position: relative; width: 188px; height: 188px; touch-action: none; -webkit-user-select: none; user-select: none; }
 .touch[data-ctx="walk"] .stick, .touch[data-ctx="market"] .stick, .touch[data-ctx="lr"] .stick, .touch[data-ctx="race"] .stick { display: block; }
 .touch[data-ctx="walk"] .dpad, .touch[data-ctx="market"] .dpad, .touch[data-ctx="lr"] .dpad, .touch[data-ctx="race"] .dpad { display: none; }
 .touch[data-ctx="walk"] [data-k="sprint"], .touch[data-ctx="market"] [data-k="sprint"] { display: none; }
-.sbase { position: absolute; left: 50%; top: 50%; width: 118px; height: 118px; margin: -59px 0 0 -59px; border-radius: 50%; border: 3px solid var(--fg); background: rgba(43, 34, 51, .45); box-shadow: inset 0 0 0 10px rgba(255, 246, 230, .06); pointer-events: none; }
-.sknob { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; border: 3px solid var(--fg); border-bottom-width: 5px; background: rgba(43, 34, 51, .85); pointer-events: none; transition: background .12s; }
+.sbase { position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px; border-radius: 50%; border: 3px solid var(--fg); background: rgba(43, 34, 51, .45); box-shadow: inset 0 0 0 10px rgba(255, 246, 230, .06); pointer-events: none; }
+.sknob { position: absolute; left: 50%; top: 50%; width: 66px; height: 66px; margin: -33px 0 0 -33px; border-radius: 50%; border: 3px solid var(--fg); border-bottom-width: 5px; background: rgba(43, 34, 51, .85); pointer-events: none; transition: background .12s; }
 .stick.on .sknob { background: rgba(126, 200, 255, .55); }
 .stick.run .sbase { border-color: #f3d98a; } .stick.run .sknob { background: #f3d98a; }
-.dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: 4px; }
+.dpad { display: grid; grid-template-columns: repeat(3, 62px); grid-template-rows: repeat(3, 62px); gap: 5px; }
 .dpad .up { grid-area: 1 / 2; } .dpad .left { grid-area: 2 / 1; } .dpad .right { grid-area: 2 / 3; } .dpad .down { grid-area: 3 / 2; }
 .pad { background: rgba(43, 34, 51, .72); border: 2px solid var(--fg); border-radius: 8px; border-bottom-width: 5px; font-size: 30px; touch-action: none; -webkit-tap-highlight-color: transparent; }
 .pad.on { background: var(--fg); color: #000; }
-.acts { display: grid; gap: 10px; }
-.acts .pad { width: 84px; height: 46px; font-size: 23px; text-transform: uppercase; letter-spacing: .06em; }
+.acts { display: grid; gap: 12px; }
+.acts .pad { width: 100px; height: 56px; font-size: 25px; text-transform: uppercase; letter-spacing: .06em; }
 
 /* ---- overlays: title, map, studio, end card ---- */
 .ov { position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; background: rgba(43, 34, 51, .8); padding: 14px; overflow: auto; }
@@ -194,6 +194,22 @@ body.tc .title .mhint { display: block; }
 .pin:hover .pb, .pin:focus-visible .pb { background: #f3d98a; transform: translateY(-2px); }
 .pin.done .pb { background: #b9e3c4; }
 .pin.sel .pb { background: #f3d98a; box-shadow: 0 0 0 3px #c4565f, 0 3px 0 rgba(0,0,0,.35); } /* the place ENTER goes to */
+*, *::before, *::after { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+/* achievements (part_k.js): the medal toast and the list in the menu */
+.acht { position: fixed; z-index: 20; left: 50%; top: max(10px, env(safe-area-inset-top, 0px)); display: flex; align-items: center; gap: 10px; padding: 6px 14px 7px 8px; background: #3a2a3c; color: #fff6e6; border: 2px solid #e6b44a; border-bottom-width: 4px; border-radius: 10px; box-shadow: 0 4px 0 rgba(0,0,0,.3); transform: translate(-50%, -140%); pointer-events: none; }
+.acht.in { transform: translate(-50%, 0); transition: transform .35s cubic-bezier(.2, 1.4, .4, 1); }
+.acht.out { transform: translate(-50%, -140%); transition: transform .4s ease-in; }
+.acht .achi { width: 40px; height: 40px; }
+.acht small { display: block; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: #e6b44a; line-height: 1; }
+.acht b { display: block; font-size: 22px; font-weight: normal; line-height: 1.15; }
+@media (prefers-reduced-motion: reduce) { .acht.in, .acht.out { transition: none; } }
+.achi { image-rendering: pixelated; flex: 0 0 auto; }
+.mach h3 { margin: 4px 0 4px; font-size: 18px; letter-spacing: .12em; text-transform: uppercase; font-weight: normal; opacity: .75; }
+#ap .mc { width: min(420px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; }
+.machl { list-style: none; margin: 2px 0 6px; padding: 0; display: grid; gap: 8px; }
+.machl li { display: flex; align-items: center; gap: 12px; font-size: 23px; line-height: 1.15; }
+.machl .achi { width: 40px; height: 40px; }
+.machl li.miss { opacity: .38; filter: grayscale(1); }
 .derr { font-size: 17px; line-height: 1.25; background: #3a2a3c; color: #ffd0d0; padding: 6px 8px; border-radius: 6px; margin: 0 0 8px; word-break: break-word; user-select: text; -webkit-user-select: text; }
 .mapbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .mapbtns .mb { margin-top: 0; } .mapbtns .mb[disabled] { opacity: .55; cursor: default; }
 @media (pointer: coarse) and (max-height: 520px) { .mapbtns { grid-template-columns: 1fr; gap: 6px; } }
@@ -304,11 +320,11 @@ body.inrace .toast { top: 9vh; }
   .chip { font-size: 18px; padding: 2px 8px 3px; }
   .quest { max-width: min(300px, 38vw); padding: 4px 9px 5px; }
   .quest .qt { font-size: 14px; margin-bottom: 2px; } .quest .qh { font-size: 20px; } .quest .qs { font-size: 16px; } .quest .qp { margin-top: 3px; }
-  .touch { bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
-  .dpad { grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 46px); gap: 3px; }
-  .stick { width: 140px; height: 140px; } .sbase { width: 104px; height: 104px; margin: -52px 0 0 -52px; } .sknob { width: 50px; height: 50px; margin: -25px 0 0 -25px; }
+  .touch { bottom: max(18px, calc(env(safe-area-inset-bottom, 0px) + 10px)); left: max(26px, calc(env(safe-area-inset-left, 0px) + 12px)); right: max(26px, calc(env(safe-area-inset-right, 0px) + 12px)); }
+  .dpad { grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); gap: 4px; }
+  .stick { width: 166px; height: 166px; } .sbase { width: 124px; height: 124px; margin: -62px 0 0 -62px; } .sknob { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
   .pad { font-size: 26px; }
-  .acts { gap: 6px; } .acts .pad { width: 80px; height: 38px; font-size: 20px; }
+  .acts { gap: 8px; } .acts .pad { width: 94px; height: 48px; font-size: 21px; }
   .walkhint { font-size: max(22px, calc(var(--u, 3) * 8px)); top: min(24vh, 26%); }
   .toast { font-size: max(21px, calc(var(--u, 3) * 7.5px)); }
   .rec { top: max(6px, env(safe-area-inset-top, 0px)); }
@@ -335,12 +351,14 @@ body.inrace .toast { top: 9vh; }
   <div id="inv2" class="chip inv" hidden><canvas id="invc" width="12" height="7" aria-hidden="true"></canvas><span data-i="iCar">Car key</span></div>
   <button id="menu" class="chip" type="button" aria-haspopup="dialog" aria-label="Menu"><span aria-hidden="true">&#9776;</span> <span data-i="menu">Menu</span></button>
 </div>
+<div id="achT" class="acht" role="status" aria-live="polite" hidden></div>
 <div id="mp" class="mp" hidden>
   <div class="mc" role="dialog" aria-modal="true" aria-labelledby="mt">
     <h2 id="mt" class="mtt" data-i="menu">Menu</h2>
     <button id="snd" class="mb" type="button"></button>
     <button id="lang" class="mb" type="button"></button>
     <button id="mmap" class="mb" type="button" data-i="mMap" hidden></button>
+    <button id="machb" class="mb" type="button" data-i="achT" hidden>Achievements</button>
     <button id="mdev" class="mb" type="button" hidden></button>
     <button id="fs" class="mb" type="button" data-i="mFs"></button>
     <button id="rst" class="mb" type="button" data-i="mRestart"></button>
@@ -349,6 +367,13 @@ body.inrace .toast { top: 9vh; }
   </div>
 </div>
 
+<div id="ap" class="mp" hidden>
+  <div class="mc achc" role="dialog" aria-modal="true" aria-labelledby="apt">
+    <h2 id="apt" class="mtt" data-i="achT">Achievements</h2>
+    <ul id="machl" class="machl"></ul>
+    <button id="aback" class="mb prim" type="button" data-i="achBack">Back</button>
+  </div>
+</div>
 <div id="dp" class="mp" hidden>
   <div class="mc" role="dialog" aria-modal="true" aria-labelledby="dpt">
     <h2 id="dpt" class="mtt"></h2>
@@ -1133,6 +1158,9 @@ window.addEventListener('keydown', e => { if (CODES[e.code] && !e.repeat) setTou
 document.addEventListener('touchmove', e => { if (e.touches.length > 1 || (e.scale && e.scale !== 1)) e.preventDefault(); }, { passive: false });
 document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
 document.addEventListener('selectstart', e => e.preventDefault());
+document.addEventListener('selectionchange', () => { try { const s = getSelection(); if (s && s.rangeCount && !s.isCollapsed && !(s.anchorNode && s.anchorNode.parentElement && s.anchorNode.parentElement.closest('#derr'))) s.removeAllRanges(); } catch (e) {} });
+// on the touch controls the browser gets no long press at all (no selection, magnifier or callout); pointer events still drive them
+document.querySelectorAll('#touch .pad, #stick').forEach(el => el.addEventListener('touchstart', e => { if (e.cancelable) e.preventDefault(); }, { passive: false }));
 document.addEventListener('contextmenu', e => { if (touchMode) e.preventDefault(); });
 /* which buttons the current scene needs */
 function padCtx() {
@@ -2067,8 +2095,8 @@ const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)'
 let lang = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
 try { const s = localStorage.getItem('fp-lang'); if (s === 'en' || s === 'de') lang = s; } catch (e) {}
 const UI = {
-  en: { kStick: 'Joystick', kStickRun: 'Joystick to the edge', iCar: 'Car key', arcQuit: 'Back to the arcade', arcFail: 'This game could not start on this device. Try another browser or a computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Leave', arcBack: 'Back to the menu', rRot: 'Please turn your phone sideways', rSnd: 'And turn the sound up, so you can hear the game!', tMob: 'Play with your phone sideways and turn the sound up! On an iPhone, also switch off silent mode.', hWalkKb: 'Walk with WASD or the arrow keys', hWalkTc: 'Walk with the joystick', sub: 'A tiny Christmas adventure', goalLbl: 'Goal', ctlLbl: 'Controls', kWalk: 'Walk', kWalkN: 'or arrow keys', kUse: 'Use', kUseN: 'talk, open, pet. Tap the text box too.', kJump: 'Jump', kJumpN: 'hold for higher', kDuck: 'Duck', kDuckN: 'hold', menu: 'Menu', mFs: 'Fullscreen', mRestart: 'Restart game', rAsk: 'Start over from the beginning? Your progress will be lost.', rYes: 'Yes, restart', rNo: 'Cancel', mResume: 'Resume', mSndT: 'Sound', mLangT: 'Language', mOn: 'on', mOff: 'off', bJump: 'Jump', bDuck: 'Duck', bSprint: 'Sprint', next: 'ENTER: next', alt: 'A top-down pixel garden in greyscale with an office, a chicken pen and a front gate.' },
-  de: { kStick: 'Joystick', kStickRun: 'Joystick bis zum Rand', iCar: 'Autoschlüssel', arcQuit: 'Zurück zur Arcade', arcFail: 'Dieses Spiel konnte auf diesem Gerät nicht starten. Probier einen anderen Browser oder einen Computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Verlassen', arcBack: 'Zurück zum Menü', rRot: 'Bitte dreh dein Handy ins Querformat', rSnd: 'Und mach den Ton laut, damit du das Spiel hörst!', tMob: 'Spiel mit dem Handy im Querformat und mach den Ton laut! Am iPhone auch den Stummmodus ausschalten.', hWalkKb: 'Laufen mit WASD oder den Pfeiltasten', hWalkTc: 'Laufen mit dem Joystick', sub: 'Ein kleines Weihnachtsabenteuer', goalLbl: 'Ziel', ctlLbl: 'Steuerung', kWalk: 'Laufen', kWalkN: 'oder Pfeiltasten', kUse: 'Benutzen', kUseN: 'reden, öffnen, streicheln. Auch auf die Textbox tippen.', kJump: 'Springen', kJumpN: 'gedrückt halten für höher', kDuck: 'Ducken', kDuckN: 'gedrückt halten', menu: 'Menü', mFs: 'Vollbild', mRestart: 'Spiel neu starten', rAsk: 'Ganz von vorn anfangen? Dein Fortschritt geht verloren.', rYes: 'Ja, neu starten', rNo: 'Abbrechen', mResume: 'Weiterspielen', mSndT: 'Ton', mLangT: 'Sprache', mOn: 'an', mOff: 'aus', bJump: 'Sprung', bDuck: 'Ducken', bSprint: 'Rennen', next: 'ENTER: weiter', alt: 'Ein Pixelgarten in Graustufen von oben mit Büro, Hühnerstall und Gartentor.' }
+  en: { achBack: 'Back', achT: 'Achievements', kStick: 'Joystick', kStickRun: 'Joystick to the edge', iCar: 'Car key', arcQuit: 'Back to the arcade', arcFail: 'This game could not start on this device. Try another browser or a computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Leave', arcBack: 'Back to the menu', rRot: 'Please turn your phone sideways', rSnd: 'And turn the sound up, so you can hear the game!', tMob: 'Play with your phone sideways and turn the sound up! On an iPhone, also switch off silent mode.', hWalkKb: 'Walk with WASD or the arrow keys', hWalkTc: 'Walk with the joystick', sub: 'A tiny Christmas adventure', goalLbl: 'Goal', ctlLbl: 'Controls', kWalk: 'Walk', kWalkN: 'or arrow keys', kUse: 'Use', kUseN: 'talk, open, pet. Tap the text box too.', kJump: 'Jump', kJumpN: 'hold for higher', kDuck: 'Duck', kDuckN: 'hold', menu: 'Menu', mFs: 'Fullscreen', mRestart: 'Restart game', rAsk: 'Start over from the beginning? Your progress will be lost.', rYes: 'Yes, restart', rNo: 'Cancel', mResume: 'Resume', mSndT: 'Sound', mLangT: 'Language', mOn: 'on', mOff: 'off', bJump: 'Jump', bDuck: 'Duck', bSprint: 'Sprint', next: 'ENTER: next', alt: 'A top-down pixel garden in greyscale with an office, a chicken pen and a front gate.' },
+  de: { achBack: 'Zurück', achT: 'Erfolge', kStick: 'Joystick', kStickRun: 'Joystick bis zum Rand', iCar: 'Autoschlüssel', arcQuit: 'Zurück zur Arcade', arcFail: 'Dieses Spiel konnte auf diesem Gerät nicht starten. Probier einen anderen Browser oder einen Computer.', iKey: 'Garagekey', arcT: 'Arcade', arcLeave: 'Verlassen', arcBack: 'Zurück zum Menü', rRot: 'Bitte dreh dein Handy ins Querformat', rSnd: 'Und mach den Ton laut, damit du das Spiel hörst!', tMob: 'Spiel mit dem Handy im Querformat und mach den Ton laut! Am iPhone auch den Stummmodus ausschalten.', hWalkKb: 'Laufen mit WASD oder den Pfeiltasten', hWalkTc: 'Laufen mit dem Joystick', sub: 'Ein kleines Weihnachtsabenteuer', goalLbl: 'Ziel', ctlLbl: 'Steuerung', kWalk: 'Laufen', kWalkN: 'oder Pfeiltasten', kUse: 'Benutzen', kUseN: 'reden, öffnen, streicheln. Auch auf die Textbox tippen.', kJump: 'Springen', kJumpN: 'gedrückt halten für höher', kDuck: 'Ducken', kDuckN: 'gedrückt halten', menu: 'Menü', mFs: 'Vollbild', mRestart: 'Spiel neu starten', rAsk: 'Ganz von vorn anfangen? Dein Fortschritt geht verloren.', rYes: 'Ja, neu starten', rNo: 'Abbrechen', mResume: 'Weiterspielen', mSndT: 'Ton', mLangT: 'Sprache', mOn: 'an', mOff: 'aus', bJump: 'Sprung', bDuck: 'Ducken', bSprint: 'Rennen', next: 'ENTER: weiter', alt: 'Ein Pixelgarten in Graustufen von oben mit Büro, Hühnerstall und Gartentor.' }
 };
 const NAMES = {
   florian: { en: 'Florian', de: 'Florian' }, ari: { en: 'Ari', de: 'Ari' }, valentin: { en: 'Valentin', de: 'Valentin' }, jonathan: { en: 'Jonathan', de: 'Jonathan' },
@@ -2354,7 +2382,7 @@ function useThing() {
     if (story.think > 0) story.think = 0.01;
   }
   else if (id === 'cat') {
-    const h = it.ref; h.freeze = 2.4; h.react = 1.6; h.dir = p.x < h.x ? 'l' : 'r'; h.tx = null; h.state = 'sit';
+    const h = it.ref; h.petted = true; h.freeze = 2.4; h.react = 1.6; h.dir = p.x < h.x ? 'l' : 'r'; h.tx = null; h.state = 'sit';
     p.dir = Math.abs(p.x - h.x) > Math.abs(p.y - h.y) ? (h.x > p.x ? 'r' : 'l') : (h.y > p.y ? 'd' : 'u');
     for (let i = 0; i < 4; i++) heart(h.x + (i - 1.5) * 4, h.y - 12 - (i % 2) * 5);
   }
@@ -2595,7 +2623,7 @@ fsBtn.addEventListener('click', e => {
 /* ---------- menu ---------- */
 let menuOpen = false;
 function setMenu(open) {
-  menuOpen = open; $('mp').hidden = !open; $('menu').setAttribute('aria-expanded', open ? 'true' : 'false');
+  menuOpen = open; $('mp').hidden = !open; if (open) achRender(); else $('ap').hidden = true; $('menu').setAttribute('aria-expanded', open ? 'true' : 'false');
   if (open) { $('mmap').hidden = !(story.stage === 7); for (const k in KB) KB[k] = false; for (const k in TC) TC[k] = false; syncPads(); useEdge = false; $('rc').hidden = true; $('rst').hidden = false; setTimeout(() => { try { $('snd').focus(); } catch (x) {} }, 0); }
   else { try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (x) {} prev = performance.now(); }
 }
@@ -5067,6 +5095,7 @@ function rcCrash(m, nudge) {
   if (m.cr === 1) toast(tr({ en: 'Careful! Watch the traffic.', de: 'Vorsicht! Achte auf den Verkehr.' }), 2.4);
 }
 function rcScrape(m) {
+  m.scraped = true; // for the 'Careful Driver' achievement
   if (m.scrapeT > 0) return; m.scrapeT = 0.18;
   m.speed = Math.min(m.speed, RC.CRUISE * 0.82); m.shake = Math.max(m.shake, 0.12);
   noiseHit(0.1, 0.05, 2400, 1, 0, 'bandpass');
@@ -5640,6 +5669,112 @@ window.addEventListener('keydown', e => {
   const i = bs.indexOf(document.activeElement), n = e.code === 'ArrowDown' ? (i + 1) % bs.length : (i <= 0 ? bs.length - 1 : i - 1);
   bs[n].focus();
 }, true);
+/* ==========================================================================================
+   ACHIEVEMENTS: a small joke, not a collect-them-all system.
+   - Six of them, kept in memory only (story.ach); a reload resets everything.
+   - Unlocking slides in a little medal toast with a chime (#achT).
+   - The menu lists ONLY the ones found (no count, no empty slots, nothing at all until the first one).
+     In developer mode the missing ones show greyed out, with their names only (no hints).
+   - Detection reads the game's own state once per frame (achTick, called from part_z.js).
+   ========================================================================================== */
+const ACH = [
+  { k: 'work', n: { en: 'Work-Life-Balance', de: 'Work-Life-Balance' } },
+  { k: 'animals', n: { en: 'Animal-Friend', de: 'Tierfreund' } },
+  { k: 'bells', n: { en: 'Dedicated Bell Ringer', de: 'Hingebungsvoller Glöckner' } },
+  { k: 'careful', n: { en: 'Careful Driver', de: 'Vorsichtiger Fahrer' } },
+  { k: 'schumi', n: { en: 'Michael Schumacher', de: 'Michael Schumacher' } },
+  { k: 'loud', n: { en: 'You won the loudness war', de: 'Du hast den Loudness War gewonnen' } }
+];
+story.ach = {};
+
+/* ---------- medal icons: a gold disc with a tiny pixel picture, in the game's palette ---------- */
+const ACH_PIC = {
+  work: g => { r(g, 2, 3, 1, 7, '#7d5545'); r(g, 13, 3, 1, 7, '#7d5545'); for (let x = 3; x < 13; x++) r(g, x, 5 + Math.round(Math.sin((x - 3) / 9 * Math.PI) * 3), 1, 1, '#e8707c'); r(g, 6, 6, 4, 2, '#5f9c80'); r(g, 9, 5, 2, 2, '#f0c9a0'); }, // someone in a hammock
+  animals: g => { r(g, 6, 7, 4, 4, '#3a2a3c'); r(g, 4, 4, 2, 3, '#3a2a3c'); r(g, 7, 3, 2, 3, '#3a2a3c'); r(g, 10, 4, 2, 3, '#3a2a3c'); r(g, 7, 8, 2, 2, '#e8707c'); }, // a paw with a heart pad
+  bells: g => { r(g, 7, 2, 2, 1, '#7d5545'); r(g, 6, 3, 4, 2, '#f7dd8c'); r(g, 5, 5, 6, 3, '#f7dd8c'); r(g, 4, 8, 8, 2, '#f7dd8c'); r(g, 4, 8, 8, 1, '#fff6e6'); r(g, 7, 10, 2, 2, '#7d5545'); r(g, 6, 3, 1, 5, '#fff6e6'); }, // a bell
+  careful: g => { r(g, 3, 7, 10, 3, '#fff6e6'); r(g, 5, 5, 6, 2, '#fff6e6'); r(g, 6, 5, 4, 1, '#7ec8ff'); r(g, 4, 10, 2, 2, '#2b2a3a'); r(g, 10, 10, 2, 2, '#2b2a3a'); r(g, 3, 8, 1, 1, '#e8707c'); r(g, 12, 8, 1, 1, '#e8707c'); }, // the white Enyaq
+  schumi: g => { r(g, 4, 3, 7, 3, '#d4333f'); r(g, 3, 5, 9, 4, '#d4333f'); r(g, 3, 9, 8, 2, '#d4333f'); r(g, 8, 6, 4, 2, '#2b2a3a'); r(g, 4, 4, 3, 1, '#f7a0a8'); r(g, 0, 5, 2, 1, '#fff6e6'); r(g, 0, 8, 2, 1, '#fff6e6'); }, // a red racing helmet with speed lines
+  loud: g => { r(g, 3, 6, 2, 4, '#3a2a3c'); r(g, 5, 5, 2, 6, '#3a2a3c'); r(g, 7, 3, 1, 10, '#3a2a3c'); r(g, 9, 6, 1, 4, '#e8707c'); r(g, 11, 4, 1, 8, '#e8707c'); r(g, 13, 2, 1, 12, '#e8707c'); } // a speaker at full blast
+};
+const ACH_MEDAL = {};
+function achMedal(k) {
+  if (ACH_MEDAL[k]) return ACH_MEDAL[k];
+  const c = sprite(18, 18, g => {
+    r(g, 5, 0, 8, 18, '#b07a2c'); r(g, 0, 5, 18, 8, '#b07a2c'); r(g, 2, 2, 14, 14, '#b07a2c');           // dark rim
+    r(g, 5, 1, 8, 16, '#e6b44a'); r(g, 1, 5, 16, 8, '#e6b44a'); r(g, 3, 3, 12, 12, '#e6b44a');           // gold
+    r(g, 5, 2, 8, 14, '#fff3cf'); r(g, 2, 5, 14, 8, '#fff3cf'); r(g, 4, 4, 10, 10, '#fff3cf');           // face
+    r(g, 5, 1, 4, 1, '#f7dd8c'); r(g, 3, 3, 2, 1, '#f7dd8c');                                            // shine
+    g.save(); g.translate(1, 1); ACH_PIC[k](g); g.restore();
+  });
+  return (ACH_MEDAL[k] = c);
+}
+// the canvas takes the full sprite incl. its outline (20x20), so the medal is round on all sides
+function achIcon(k) { const md = achMedal(k), c = document.createElement('canvas'); c.width = md.width; c.height = md.height; c.className = 'achi'; const g = c.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(achMedal(k), 0, 0); c.setAttribute('aria-hidden', 'true'); return c; }
+
+/* ---------- unlocking ---------- */
+let achQ = [], achBusy = false;
+function achUnlock(k) {
+  if (story.ach[k]) return; const a = ACH.find(x => x.k === k); if (!a) return;
+  story.ach[k] = true; achQ.push(a); if (!achBusy) achNext();
+}
+function achNext() {
+  const a = achQ.shift(); if (!a) { achBusy = false; return; }
+  achBusy = true;
+  const el = $('achT'); el.textContent = '';
+  const ic = achIcon(a.k), tx = document.createElement('div'), l = document.createElement('small'), n = document.createElement('b');
+  l.textContent = tr({ en: 'Achievement', de: 'Erfolg' }); n.textContent = tr(a.n); tx.append(l, n); el.append(ic, tx);
+  el.hidden = false; el.classList.remove('out'); void el.offsetWidth; el.classList.add('in');
+  [0, 0.09, 0.18, 0.3].forEach((d, i) => tone([783.99, 987.77, 1174.66, 1567.98][i], 0.22, 'triangle', 0.045, d)); tone(2093, 0.3, 'sine', 0.02, 0.42);
+  setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); setTimeout(() => { el.hidden = true; el.classList.remove('out'); achNext(); }, 450); }, 3600);
+}
+
+/* ---------- detection, once per frame ---------- */
+let achBoost = 0, achCr = 0;
+function achTick(dt) {
+  const A = story.ach;
+  // Work-Life-Balance: 15 seconds in the hammock in one go
+  if (!A.work && p.rest && p.rest.kind === 'hammock' && p.rest.t >= 15) achUnlock('work');
+  // Animal-Friend: all 7 hens and both cats petted (garden cat, office cat)
+  if (!A.animals) {
+    const hens = maps.garden.actors.filter(a => a.kind === 'hen'), cats = [maps.garden, maps.office].map(m => m.actors.find(a => a.kind === 'cat')).filter(Boolean);
+    if (hens.length === 7 && cats.length === 2 && hens.every(h => h.petted) && cats.every(c => c.petted)) achUnlock('animals');
+  }
+  const m = story.mg;
+  // Dedicated Bell Ringer: every bell of the Christmas market
+  if (!A.bells && m && !m.rw && !m.tg && !m.hj && !m.rc && mgLevel && mgLevel.bellsTotal && m.coins >= mgLevel.bellsTotal) achUnlock('bells');
+  if (m && m.rc) {
+    // Careful Driver: over the finish line without a crash and without scraping a wall
+    if (!A.careful && m.phase === 'finish' && !m.cr && !m.scraped) achUnlock('careful');
+    // Michael Schumacher: 15 seconds of boost in one go, without a crash or a wall scrape in between (only on a drive after the ending)
+    const boosting = m.phase === 'race' && (down('up') || down('jump') || down('sprint'));
+    const bump = (m.cr || 0) !== achCr || m.scrapeT > 0; achCr = m.cr || 0;
+    achBoost = boosting && !bump ? achBoost + dt : 0;
+    if (!A.schumi && story.stage >= 12 && achBoost >= 15) achUnlock('schumi');
+  } else { achBoost = 0; achCr = 0; }
+  // You won the loudness war: all 32 steps on, exported
+  if (!A.loud && daw.busy && daw.grid.length === 4 && daw.grid.every(row => row.length === 8 && row.every(Boolean))) achUnlock('loud');
+}
+
+/* ---------- the achievements screen, opened from the menu (like the developer screen) ---------- */
+function achRender() {
+  const dev = !$('mdev').hidden, shown = ACH.filter(a => story.ach[a.k] || dev), list = $('machl');
+  $('machb').hidden = !shown.length; // the menu button only exists once something is found (or in developer mode)
+  list.textContent = '';
+  shown.forEach(a => {
+    const li = document.createElement('li'); if (!story.ach[a.k]) li.className = 'miss';
+    const s = document.createElement('span'); s.textContent = tr(a.n);
+    li.append(achIcon(a.k), s); list.appendChild(li);
+  });
+}
+function setAch(open) {
+  $('ap').hidden = !open;
+  if (open) { achRender(); $('mp').hidden = true; focusSoon($('aback')); }
+  else if (menuOpen) { $('mp').hidden = false; focusSoon($('machb')); }
+}
+$('machb').addEventListener('click', () => setAch(true));
+$('aback').addEventListener('click', () => setAch(false));
+$('ap').addEventListener('click', e => { if (e.target === $('ap')) setAch(false); });
+window.addEventListener('keydown', e => { if (e.code === 'Escape' && !$('ap').hidden) { e.preventDefault(); e.stopImmediatePropagation(); setAch(false); } }, true);
 /* ---------- go ---------- */
 const PORT = window.matchMedia ? window.matchMedia('(pointer: coarse) and (orientation: portrait) and (max-width: 700px)') : null;
 enterMap('garden', maps.garden.start);
@@ -5662,6 +5797,7 @@ function frame(now) {
   try {
     padTick();
     const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+    achTick(dt);
     const away = PORT && PORT.matches;
     document.body.classList.toggle('inmg', !!story.mg);
     document.body.classList.toggle('inrose', !!(story.mg && (story.mg.rw || story.mg.hj)));
