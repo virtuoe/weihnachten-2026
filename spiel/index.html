@@ -256,16 +256,21 @@ body.tc .title .mhint { display: block; }
 .arcscr canvas { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; image-rendering: pixelated; }
 .arcscr::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px); border-radius: 8px; box-shadow: inset 0 0 24px rgba(126,200,255,.18); }
 .arclist { display: grid; gap: 6px; }
+.arcpad { display: none; grid-template-columns: repeat(3, 1fr); gap: 6px; touch-action: none; }
+body.tc #arcov.cg .arcpad { display: grid; }
+.arcpad .mb { margin: 0; min-height: 52px; font-size: 24px; touch-action: none; }
 .arclist[hidden] { display: none; }
 .arcsoon { text-align: center; font-size: 22px; opacity: .85; margin: 2px 0; }
 .arcc .rr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .arcc .rr .mb[hidden] { display: none; }
 .arcc .rr:has(#arcback[hidden]) { grid-template-columns: 1fr; }
-@media (min-width: 760px) { /* wide screens: the game list beside the screen, so the menu fits in height */
+@media (min-width: 760px) { .arcpad { grid-area: l; align-self: start; }
+ /* wide screens: the game list beside the screen, so the menu fits in height */
   .arcc { width: min(940px, 100%); grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: "h h" "s l" "s b"; column-gap: 12px; }
   .arcc .cardh { grid-area: h; } .arcscr { grid-area: s; width: min(100%, calc((100vh - 120px) * 4 / 3)); align-self: start; } .arclist { grid-area: l; align-self: start; } .arcc .rr { grid-area: b; grid-template-columns: 1fr; align-self: end; }
 }
-@media (pointer: coarse) and (max-height: 520px) { .arcgame span { display: none; } .arcgame b { font-size: 21px; } .arclist { gap: 5px; } .arcc { width: min(640px, 100%); grid-template-columns: minmax(0, 1fr) 190px; grid-template-areas: "h h" "s l" "s b"; } .arcc .cardh { grid-area: h; } .arcscr { grid-area: s; width: min(100%, calc((100vh - 90px) * 4 / 3)); } .arclist { grid-area: l; align-self: start; } .arcc .rr { grid-area: b; grid-template-columns: 1fr; align-self: end; } }
+@media (pointer: coarse) and (max-height: 520px) { .arcpad { grid-area: l; align-self: start; } .arcpad .mb { min-height: 46px; }
+ .arcgame span { display: none; } .arcgame b { font-size: 21px; } .arclist { gap: 5px; } .arcc { width: min(640px, 100%); grid-template-columns: minmax(0, 1fr) 190px; grid-template-areas: "h h" "s l" "s b"; } .arcc .cardh { grid-area: h; } .arcscr { grid-area: s; width: min(100%, calc((100vh - 90px) * 4 / 3)); } .arclist { grid-area: l; align-self: start; } .arcc .rr { grid-area: b; grid-template-columns: 1fr; align-self: end; } }
 .arcgame { display: grid; gap: 2px; text-align: left; }
 .arcgame b { font-size: 24px; } .arcgame span { font-size: 18px; opacity: .8; line-height: 1.2; }
 .arcplay { position: fixed; inset: 0; z-index: 30; background: #0d0c18; display: flex; flex-direction: column; }
@@ -440,6 +445,10 @@ body.inrace .toast { top: 9vh; }
     <div class="cardh"><h2 id="arct" data-i="arcT">Arcade</h2></div>
     <div class="arcscr"><canvas id="arcv" width="192" height="144"></canvas></div>
     <div id="arclist" class="arclist"></div>
+    <div id="arcpad" class="arcpad" aria-hidden="true">
+      <button class="mb" type="button" data-ak="b">B</button><button class="mb" type="button" data-ak="up">&#9650;</button><button class="mb prim" type="button" data-ak="a">A</button>
+      <button class="mb" type="button" data-ak="left">&#9664;</button><button class="mb" type="button" data-ak="down">&#9660;</button><button class="mb" type="button" data-ak="right">&#9654;</button>
+    </div>
     <div class="rr"><button id="arcback" class="mb" type="button" data-i="arcBack" hidden>Back to the menu</button><button id="arcx" class="mb prim" type="button" data-i="arcLeave">Leave</button></div>
   </div>
 </div>
@@ -1167,6 +1176,7 @@ function padCtx() {
   if (story.cut) return 'enter';
   const m = story.mg; if (!m) return 'walk';
   if (m.rc) return 'race'; if (m.hj) return 'lr'; if (m.rw) return 'dpad';
+  if (m.mz) return 'race'; // the maze: the joystick in 4 directions, no action buttons
   if (m.tg) return m.phase === 'top' ? 'lr' : 'station';
   return m.phase === 'rec' ? 'dpad' : 'market';
 }
@@ -1696,7 +1706,7 @@ function buildGarden() {
   penOpenEnt = addEnt(mkFence(1), 9 * T + 8, 28 * T - 8, 28 * T + 3, 'fence'); // the pen's little gate, swung wide open
   penClosedEnt = addEnt(mkFenceV(2), 9 * T + 5, 28 * T, 30 * T, 'fence'); penClosedEnt.hidden = true; // ...and the same gate shut
   addEnt(XMAS, 14 * T - 4, 28 * T - 38, 28 * T, 'soft', 14 * T + 8); hs[I(14, 27)] = Infinity;
-  [[11, 26], [15, 31], [11, 32]].forEach(([x, y]) => { addEnt(BUSH, x * T + 1, y * T + 4, (y + 1) * T, 'soft'); hs[I(x, y)] = Infinity; });
+  [[11, 26], [15, 31], [11, 32]].forEach(([x, y]) => { addEnt(BUSH, x * T + 1, y * T + 4, (y + 1) * T, 'soft'); }); // no collision: you walk through bushes
 
   // level 3: the garden
   addEnt(SNOWMAN, 9 * T, 17 * T - 20, 17 * T + 4, 'soft'); hs[I(9, 16)] = Infinity;
@@ -1711,14 +1721,14 @@ function buildGarden() {
     addEnt(BENCH, bx * T + 1, (by + 1) * T - 15, (by + 1) * T - 1, 'soft'); hs[I(bx, by)] = Infinity; hs[I(bx + 1, by)] = Infinity;
     interact.push({ id: 'bench', x: (bx + 1) * T, y: (by + 1) * T + 8, r: 24, rest: { sx: (bx + 1) * T, sy: (by + 1) * T + 1, ex: (bx + 1) * T, ey: (by + 1) * T + 9 } });
   });
-  [[7, 15], [12, 19], [15, 17], [10, 20]].forEach(([x, y]) => { addEnt(BUSH, x * T + 1, y * T + 4, (y + 1) * T, 'soft'); hs[I(x, y)] = Infinity; });
+  [[7, 15], [12, 19], [15, 17], [10, 20]].forEach(([x, y]) => { addEnt(BUSH, x * T + 1, y * T + 4, (y + 1) * T, 'soft'); }); // no collision: you walk through bushes
   [[GIFT1, 11, 16], [GIFT3, 12, 16]].forEach(([s, x, y]) => addEnt(s, x * T + 4, (y + 1) * T - s.height + 2, (y + 1) * T, 'soft', x * T + 8));
 
   // level 4: the terrace in front of the office
   addEnt(OFFICE, 6 * T, 2 * T, 8 * T, 'house', 6 * T + 56); solid(6, 2, 7, 6, Infinity);
   [[4, 7], [14, 7]].forEach(([x, y]) => { addEnt(XMAS, x * T - 4, (y + 1) * T - 38, (y + 1) * T, 'soft', x * T + 8); hs[I(x, y)] = Infinity; });
   [[GIFT1, 3, 7], [GIFT2, 5, 7], [GIFT3, 13, 7], [GIFT2, 15, 7]].forEach(([s, x, y]) => { addEnt(s, x * T + 4, (y + 1) * T - s.height + 2, (y + 1) * T, 'soft', x * T + 8); });
-  [[3, 9], [7, 9], [12, 9], [15, 9]].forEach(([x, y]) => { addEnt(BUSH, x * T + 1, y * T + 4, (y + 1) * T, 'soft'); hs[I(x, y)] = Infinity; });
+  [[3, 9], [7, 9], [12, 9], [15, 9]].forEach(([x, y]) => { addEnt(BUSH, x * T + 1, y * T + 4, (y + 1) * T, 'soft'); }); // no collision: you walk through bushes
 
   // a little pond in the north-west corner of level 3 curls around a grassy nook where a hen is sitting: jump over the water
   [[4, 14], [4, 15], [4, 16], [5, 16], [3, 16], [2, 16], [3, 17], [4, 17], [5, 17]].forEach(([x, y]) => { ground[I(x, y)] = 20; hs[I(x, y)] = 7; });
@@ -1727,7 +1737,7 @@ function buildGarden() {
   [[5, 33], [14, 32], [16, 27], [4, 19], [9, 21], [15, 19], [8, 19], [13, 18], [4, 4], [16, 3], [15, 6], [10, 10], [3, 12], [2, 29]].forEach(([x, y], i) => {
     if (ground[I(x, y)] !== 0 || hs[I(x, y)] || x < 2 || x > 19) return;
     if (interact.some(it => it.x != null && Math.hypot(it.x - (x * T + 8), it.y - (y * T + 8)) < 20)) return;
-    const m = MOUNDS[i % 3]; addEnt(m, x * T + (16 - m.width + 2) / 2 | 0, (y + 1) * T - m.height + 2, (y + 1) * T, 'soft'); hs[I(x, y)] = Infinity;
+    const m = MOUNDS[i % 3]; addEnt(m, x * T + (16 - m.width + 2) / 2 | 0, (y + 1) * T - m.height + 2, (y + 1) * T, 'soft'); // no collision: you walk through snow piles
   });
 
   // hens: seven homes. Four of them end up on the roost (see below), three stay loose on levels 3 and 4.
@@ -2646,7 +2656,7 @@ const DEV_ITEMS = [
   { g: { en: 'Missions: start', de: 'Missionen: Start' } },
   { k: 'church', n: { en: 'Church (rose window)', de: 'Kirche (Rosenfenster)' } },
   { k: 'market', n: { en: 'Christmas market (jump and run)', de: 'Weihnachtsmarkt (Jump and Run)' } },
-  { k: 'station', n: { en: 'Stuttgart Hbf (Tetris)', de: 'Hauptbahnhof (Tetris)' } },
+  { k: 'station', n: { en: 'Stuttgart Hbf (maze)', de: 'Hauptbahnhof (Labyrinth)' } },
   { k: 'forest', n: { en: 'Forest (tree climb)', de: 'Wald (Baumklettern)' } },
   { g: { en: 'Missions: end (sound recorded)', de: 'Missionen: Ende (Klang aufgenommen)' } },
   { k: 'end-church', n: { en: 'Church done', de: 'Kirche geschafft' } },
@@ -2870,6 +2880,9 @@ function missionQuest() {
       { en: 'Follow the singing bird to the top. The branches bounce you up, the joystick steers. Lanterns are checkpoints.', de: 'Folge dem singenden Vogel nach oben. Die Äste lassen dich hüpfen, der Joystick lenkt. Laternen sind Kontrollpunkte.' });
     return Q('hj2', { en: 'Record the bird song', de: 'Nimm den Vogelgesang auf' }, { en: 'Hold still, the bird is singing.', de: 'Halt still, der Vogel singt.' });
   }
+  if (m.mz) return Q('mz', { en: 'Find the ladder to the roof', de: 'Finde die Leiter zum Dach' },
+    { en: 'Work your way up through the construction site (arrow keys or WASD). A security guard follows your footsteps: keep moving and don’t get caught backtracking.', de: 'Arbeite dich durch die Baustelle nach oben (Pfeiltasten oder WASD). Ein Wachmann folgt deinen Schritten: bleib in Bewegung und lass dich beim Umkehren nicht erwischen.' },
+    { en: 'Work your way up through the construction site with the joystick. A security guard follows your footsteps: keep moving and don’t get caught backtracking.', de: 'Arbeite dich mit dem Joystick durch die Baustelle nach oben. Ein Wachmann folgt deinen Schritten: bleib in Bewegung und lass dich beim Umkehren nicht erwischen.' });
   if (m.rc) return null;
   // Christmas market
   if (ph === 'rec') return Q('mg2', { en: 'Play Jingle Bells on the trumpet', de: 'Spiel Jingle Bells auf der Trompete' },
@@ -3674,6 +3687,7 @@ function mgJumpSound() { tone(520, 0.05, 'square', 0.025); tone(760, 0.07, 'squa
 /* ---------- the update ---------- */
 function mgUpdate(dt) {
   const m = story.mg, L = mgLevel; if (!m) return;
+  if (m.mz) { mzUpdate(dt); return; } // the S21 maze (part_m.js)
   if (m.tg) { tgUpdate(dt); return; }
   if (m.rw) { rwUpdate(dt); return; }
   if (m.hj) { hjUpdate(dt); return; }
@@ -3845,6 +3859,7 @@ const MG_SKY = ['#2a2a62', '#33336f', '#3e3b7c', '#4d4687', '#625294', '#7b62a0'
 const MG_DIG = ['111101101101111', '010110010010111', '111001111100111', '111001111001111', '101101111001001', '111100111001111', '111100111101111', '111001001001001', '111101111101111', '111101111001111'];
 function mgNum(n, x, y, col) { String(n).split('').forEach((ch, i) => { const d = MG_DIG[+ch]; for (let k = 0; k < 15; k++) if (d[k] === '1') { ctx.fillStyle = col; ctx.fillRect(x + i * 4 + (k % 3), y + ((k / 3) | 0), 1, 1); } }); }
 function mgRender() {
+  if (story.mg && story.mg.mz) { mzRender(); return; }
   if (story.mg && story.mg.tg) { tgRender(); return; }
   if (story.mg && story.mg.rw) { rwRender(); return; }
   if (story.mg && story.mg.hj) { hjRender(); return; }
@@ -4018,13 +4033,13 @@ function tgLock(m) {
 function startStationRun() {
   if (story.fadeDir !== 0) return;
   tone(392, 0.1, 'triangle', 0.05); tone(587, 0.14, 'triangle', 0.05, 0.08);
-  story.fadeDir = 1; story.fadeCb = tgStart;
+  story.fadeDir = 1; story.fadeCb = mzStart; // first the S21 construction-site maze (part_m.js); its goal leads to the roof (tgStart)
 }
 function tgStart() {
   tgSprites(); story.place = 'station'; qSig = '#'; near = null; story.think = 0; try { $('think').hidden = true; } catch (e) {}
   story.recording = null; try { $('rec').hidden = true; } catch (e) {}
   story.mg = { tg: true, phase: 'play', t: 0, g: tgGrid(), bag: [], next: 0, cur: null, drop: 0, lk: 0, alt: 0, sa: 0, clr: null, tries: 0, wait: 0, kp: {}, das: 0, dasK: '', px: 4.5, py: 0, pvy: 0, tc: null, dir: 'r', anim: 0, walk: false, air: false, parts: [], music: 1.5, ft: 0, tx: 40, got: false, gt: 0, notes: [], hp: 1 };
-  tgSpawn(story.mg);
+  tgTopStart(story.mg); // straight to the roof: the falling-blocks part is now the arcade game 'Stapel 21' (part_l.js)
 }
 function tgTopStart(m) {
   m.phase = 'top'; m.tx = 40; m.ty = 150; m.dir = 'r'; m.got = false; m.gt = 0; m.parts = []; m.cur = null; m.clr = null;
@@ -5565,10 +5580,11 @@ function arcStartGame() {
   const gm = ARCADE_GAMES[arc.sel]; if (!gm) return;
   if (gm.frame) { arcFrameStart(gm); return; }
   arc.game = gm; $('arcback').hidden = false; $('arclist').hidden = true;
+  $('arcov').classList.add('cg'); // shows the touch buttons for screen games
   try { gm.start({ pressed: k => !!arc.edge[k], tone, lang: () => lang }); } catch (e) { arc.game = null; }
   focusSoon($('arcback'));
 }
-function arcStopGame() { if (arc.frame) { arcFrameStop(); return; } try { arc.game && arc.game.stop && arc.game.stop(); } catch (e) {} arc.game = null; $('arclist').hidden = false; arcMenu(); }
+function arcStopGame() { if (arc.frame) { arcFrameStop(); return; } $('arcov').classList.remove('cg'); arc.held = {}; try { arc.game && arc.game.stop && arc.game.stop(); } catch (e) {} arc.game = null; $('arclist').hidden = false; arcMenu(); }
 function arcFrame(now) {
   if (!arc.open) return;
   const dt = Math.min(0.05, (now - arc.last) / 1000); arc.last = now; arc.t += dt;
@@ -5669,6 +5685,15 @@ window.addEventListener('keydown', e => {
   const i = bs.indexOf(document.activeElement), n = e.code === 'ArrowDown' ? (i + 1) % bs.length : (i <= 0 ? bs.length - 1 : i - 1);
   bs[n].focus();
 }, true);
+
+// touch buttons for games drawn on the arcade screen (A, B and the arrows), each finger on its own
+document.querySelectorAll('#arcpad [data-ak]').forEach(btn => {
+  const k = btn.dataset.ak;
+  btn.addEventListener('touchstart', e => { if (e.cancelable) e.preventDefault(); }, { passive: false });
+  btn.addEventListener('pointerdown', e => { e.preventDefault(); try { btn.setPointerCapture(e.pointerId); } catch (x) {} if (!arc.held[k]) arc.edge[k] = true; arc.held[k] = true; btn.classList.add('on'); });
+  const up = () => { arc.held[k] = false; btn.classList.remove('on'); };
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => btn.addEventListener(t, up));
+});
 /* ==========================================================================================
    ACHIEVEMENTS: a small joke, not a collect-them-all system.
    - Six of them, kept in memory only (story.ach); a reload resets everything.
@@ -5775,6 +5800,709 @@ $('machb').addEventListener('click', () => setAch(true));
 $('aback').addEventListener('click', () => setAch(false));
 $('ap').addEventListener('click', e => { if (e.target === $('ap')) setAch(false); });
 window.addEventListener('keydown', e => { if (e.code === 'Escape' && !$('ap').hidden) { e.preventDefault(); e.stopImmediatePropagation(); setAch(false); } }, true);
+/* ==========================================================================================
+   ARCADE: "Stapel 21", the falling-blocks game that used to be the station level, now in the arcade machine.
+   Close to the original: 10x20 board, the 7 classic pieces from a shuffled bag, a NEXT preview, a level up every
+   10 lines with rising speed, classic scoring (40 / 100 / 300 / 1200 x (level + 1)), soft drop 1 point per row,
+   hard drop 2 per row. Score instead of the old climb. Named "Stapel 21" (a nod to Stuttgart 21, and the
+   "Tetris" name is a trademark).
+   Controls: LEFT/RIGHT move (held: repeat), UP turn, B (SHIFT/X) turn the other way, DOWN soft drop, A (SPACE/ENTER) hard drop.
+   Runs on the arcade screen (192x144) through the ARCADE_GAMES interface in part_j.js.
+   ========================================================================================== */
+const ST_W = 10, ST_H = 20, ST_C = 6, ST_X = 66, ST_Y = 12;
+const ST_P = { // the 7 pieces, spawn orientation, in a 4x4 box
+  I: [[0, 1], [1, 1], [2, 1], [3, 1]], O: [[1, 0], [2, 0], [1, 1], [2, 1]], T: [[1, 0], [0, 1], [1, 1], [2, 1]],
+  S: [[1, 0], [2, 0], [0, 1], [1, 1]], Z: [[0, 0], [1, 0], [1, 1], [2, 1]], J: [[0, 0], [0, 1], [1, 1], [2, 1]], L: [[2, 0], [0, 1], [1, 1], [2, 1]]
+};
+const ST_KEYS = 'IOTSZJL', ST_COL = { I: NOTE_COL[5], O: NOTE_COL[2], T: NOTE_COL[6], S: NOTE_COL[3], Z: NOTE_COL[0], J: NOTE_COL[4], L: NOTE_COL[1] };
+const ST_FRAMES = [48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2]; // frames per row at 60 fps, by level (the classic curve)
+const ST_LINE = [0, 40, 100, 300, 1200];
+/* the Stuttgart 21 look: night sky, the city, the Bonatz tower of the Hbf with its turning Mercedes star (right),
+   a construction crane with a blinking light (left), a site fence, and hazard stripes around the board (the construction pit) */
+let stBG = null;
+function stBackground(W, H) {
+  if (stBG) return stBG;
+  const [c, g] = mk(W, H);
+  const bands = ['#0d0c18', '#111027', '#161433', '#1b1840', '#211c48'];
+  bands.forEach((col, i) => { g.fillStyle = col; g.fillRect(0, Math.round(i * H / bands.length), W, Math.ceil(H / bands.length)); });
+  for (let i = 0; i < 46; i++) { g.fillStyle = i % 4 ? '#3a3966' : '#8a88c0'; g.fillRect((i * 67) % W, (i * 29) % 90, 1, 1); }
+  // the city skyline, two layers
+  for (let x = 0, i = 0; x < W; i++) { const w = 6 + (i * 7) % 9, h = 18 + (i * 13) % 22; g.fillStyle = '#1e1b3a'; g.fillRect(x, H - 10 - h, w, h); x += w + 1; }
+  for (let x = 3, i = 0; x < W; i++) { const w = 8 + (i * 5) % 7, h = 10 + (i * 11) % 14; g.fillStyle = '#262246'; g.fillRect(x, H - 10 - h, w, h);
+    for (let y = H - 8 - h; y < H - 12; y += 4) for (let xx = x + 1; xx < x + w - 1; xx += 3) if ((xx * 7 + y * 3 + i) % 5 === 0) { g.fillStyle = '#e6b44a'; g.fillRect(xx, y, 1, 1); }
+    x += w + 2; }
+  // the Bonatz tower (right)
+  const tx = 150, ty = 76, tw = 22;
+  g.fillStyle = '#8f846f'; g.fillRect(tx, ty, tw, H - 10 - ty);
+  g.fillStyle = '#b3a68b'; g.fillRect(tx + 1, ty, tw - 4, H - 10 - ty);
+  for (let y = ty + 3; y < H - 10; y += 4) { g.fillStyle = '#9c917a'; g.fillRect(tx + 1, y, tw - 4, 1); }
+  g.fillStyle = '#26365c'; g.fillRect(tx + 8, ty + 8, 6, 18); g.fillStyle = '#b3a68b'; g.fillRect(tx + 10, ty + 8, 2, 18);
+  g.fillStyle = '#7d735f'; g.fillRect(tx - 1, ty - 3, tw + 2, 3);
+  g.fillStyle = '#c7c3d3'; g.fillRect(tx + tw / 2 - 1, ty - 9, 2, 6); // the mast of the star
+  // the crane (left): mast, jib, counter-weight, cabin, hook
+  const cx = 30, cy = 100;
+  g.fillStyle = '#e6b44a';
+  for (let y = cy; y < H - 10; y++) { g.fillRect(cx, y, 1, 1); g.fillRect(cx + 3, y, 1, 1); if ((y - cy) % 4 === 0) g.fillRect(cx, y, 4, 1); if ((y - cy) % 4 === 2) g.fillRect(cx + 1, y, 2, 1); }
+  g.fillRect(4, cy, 56, 1); g.fillRect(4, cy + 2, 56, 1); for (let x = 4; x < 60; x += 3) g.fillRect(x, cy + 1, 1, 1);
+  g.fillStyle = '#6a6a7e'; g.fillRect(6, cy + 3, 6, 4);
+  g.fillStyle = '#c4565f'; g.fillRect(cx + 4, cy + 3, 4, 4);
+  g.fillStyle = '#8a8aa0'; g.fillRect(50, cy + 3, 1, 14); g.fillStyle = '#e6b44a'; g.fillRect(49, cy + 17, 3, 2);
+  // the site fence along the bottom
+  g.fillStyle = '#2a2638'; g.fillRect(0, H - 10, W, 10);
+  for (let x = 0; x < W; x += 12) { g.fillStyle = '#d9d4e3'; g.fillRect(x, H - 9, 11, 6); g.fillStyle = '#c4565f'; g.fillRect(x, H - 9, 11, 2); }
+  return (stBG = c);
+}
+function stDecor(g, t) {
+  // the turning Mercedes star on the tower
+  const sx = 161, sy = 62, R = 6;
+  g.fillStyle = '#d9dceb';
+  for (let a = 0; a < 40; a++) { const q = a / 40 * Math.PI * 2; g.fillRect(Math.round(sx + Math.cos(q) * R), Math.round(sy + Math.sin(q) * R), 1, 1); }
+  const sp = Math.cos(t * 0.8); // seen turning: the spokes squeeze sideways
+  for (let k = 0; k < 3; k++) { const q = -Math.PI / 2 + k * Math.PI * 2 / 3; for (let r = 0; r < R; r++) g.fillRect(Math.round(sx + Math.cos(q) * r * sp), Math.round(sy + Math.sin(q) * r), 1, 1); }
+  // the blinking light on the crane
+  if (Math.floor(t * 1.5) % 2 === 0) { g.fillStyle = '#ff4d5a'; g.fillRect(31, 97, 2, 2); g.fillStyle = 'rgba(255,77,90,.25)'; g.fillRect(29, 95, 6, 6); }
+}
+let stHi = 0; // best score this session (a reload resets it, like the rest of the game)
+
+function stRot(cells, k, n) { // rotate the piece cells k quarter turns clockwise inside an n x n box
+  let c = cells;
+  for (let i = 0; i < ((k % 4) + 4) % 4; i++) c = c.map(([x, y]) => [n - 1 - y, x]);
+  return c;
+}
+const stGame = {
+  id: 'stapel', name: { en: 'Stapel 21', de: 'Stapel 21' },
+  desc: { en: 'Falling blocks on Germany’s most famous construction site. Clear lines before the opening is postponed again.', de: 'Fallende Blöcke auf Deutschlands berühmtester Baustelle. Räum Reihen, bevor die Eröffnung wieder verschoben wird.' },
+  start(api) { this.api = api; this.s = { st: 'title', t: 0 }; },
+  stop() { this.s = null; },
+  reset() {
+    const s = this.s; s.st = 'play'; s.g = Array.from({ length: ST_H }, () => Array(ST_W).fill(null));
+    s.bag = []; s.next = this.draw(); s.score = 0; s.lines = 0; s.lvl = 0; s.clr = null; s.das = 0; s.dasK = ''; s.lock = 0; s.lockN = 0; s.fall = 0; s.soft = 0;
+    this.spawn();
+  },
+  draw() { const s = this.s; if (!s.bag.length) { s.bag = ST_KEYS.split(''); for (let i = s.bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [s.bag[i], s.bag[j]] = [s.bag[j], s.bag[i]]; } } return s.bag.pop(); },
+  cells(p) { return stRot(ST_P[p.k], p.r, p.k === 'I' ? 4 : p.k === 'O' ? 4 : 3).map(([x, y]) => [x + p.x, y + p.y]); },
+  fits(p) { return this.cells(p).every(([x, y]) => x >= 0 && x < ST_W && y < ST_H && (y < 0 || !this.s.g[y][x])); },
+  spawn() {
+    const s = this.s; s.cur = { k: s.next, r: 0, x: s.next === 'O' ? 3 : 3, y: s.next === 'I' ? -1 : 0 }; s.next = this.draw(); s.lock = 0; s.lockN = 0; s.fall = 0;
+    if (!this.fits(s.cur)) { s.st = 'over'; s.t = 0; if (s.score > stHi) { stHi = s.score; s.hi = true; } [523.25, 392, 311.13, 261.63].forEach((f, i) => this.api.tone(f, 0.22, 'square', 0.03, i * 0.16)); }
+  },
+  move(dx, dy, dr) {
+    const s = this.s, p = s.cur, q = { ...p, x: p.x + dx, y: p.y + dy, r: p.r + (dr || 0) };
+    const kicks = dr ? [[0, 0], [-1, 0], [1, 0], [0, -1], [-2, 0], [2, 0]] : [[0, 0]];
+    for (const [kx, ky] of kicks) { const t = { ...q, x: q.x + kx, y: q.y + ky }; if (this.fits(t)) { s.cur = t; if (s.lockN < 15 && (dx || dr)) { s.lock = 0; s.lockN++; } return true; } }
+    return false;
+  },
+  land() {
+    const s = this.s;
+    for (const [x, y] of this.cells(s.cur)) if (y >= 0) s.g[y][x] = s.cur.k;
+    if (this.cells(s.cur).some(([, y]) => y < 0)) { s.cur = null; s.st = 'over'; s.t = 0; if (s.score > stHi) { stHi = s.score; s.hi = true; } return; }
+    const full = []; for (let y = 0; y < ST_H; y++) if (s.g[y].every(Boolean)) full.push(y);
+    s.cur = null;
+    if (full.length) {
+      s.clr = { rows: full, t: 0 };
+      if (full.length === 4) [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => this.api.tone(f, 0.16, 'square', 0.035, i * 0.06));
+      else [659.25, 880].slice(0, full.length === 1 ? 1 : 2).forEach((f, i) => this.api.tone(f, 0.12, 'square', 0.03, i * 0.07));
+    } else { this.api.tone(180, 0.05, 'square', 0.025); this.spawn(); }
+  },
+  update(dt, k) {
+    const s = this.s; if (!s) return; const P = this.api.pressed; s.t += dt;
+    if (s.st === 'title' || s.st === 'over') { if (P('a') || (s.st === 'title' && P('up'))) this.reset(); return; }
+    if (s.clr) { // the cleared rows flash, then drop away
+      s.clr.t += dt; if (s.clr.t < 0.35) return;
+      const n = s.clr.rows.length; s.g = s.g.filter((_, y) => !s.clr.rows.includes(y)); while (s.g.length < ST_H) s.g.unshift(Array(ST_W).fill(null));
+      s.lines += n; s.score += ST_LINE[n] * (s.lvl + 1); s.lvl = Math.floor(s.lines / 10); s.clr = null; this.spawn(); return;
+    }
+    if (!s.cur) return;
+    // turning
+    if (P('up')) { if (this.move(0, 0, 1)) this.api.tone(880, 0.03, 'square', 0.015); }
+    if (P('b')) { if (this.move(0, 0, -1)) this.api.tone(880, 0.03, 'square', 0.015); }
+    // sideways, with auto-repeat while held
+    const dir = k.left && !k.right ? -1 : k.right && !k.left ? 1 : 0, dk = dir < 0 ? 'l' : dir > 0 ? 'r' : '';
+    if (dk !== s.dasK) { s.dasK = dk; s.das = 0; if (dir) this.move(dir, 0); }
+    else if (dir) { s.das += dt; if (s.das > 0.17) { s.das -= 0.05; this.move(dir, 0); } }
+    // hard drop
+    if (P('a')) { let n = 0; while (this.move(0, 1)) n++; s.score += n * 2; this.api.tone(140, 0.07, 'square', 0.03); this.land(); return; }
+    // gravity (soft drop: much faster, 1 point per row)
+    const step = ST_FRAMES[Math.min(s.lvl, ST_FRAMES.length - 1)] / 60, soft = k.down;
+    s.fall += dt;
+    const every = soft ? Math.min(step, 0.035) : step;
+    while (s.fall >= every) {
+      s.fall -= every;
+      if (this.move(0, 1)) { if (soft) s.score += 1; s.lock = 0; }
+      else break;
+    }
+    // resting on something: a short lock delay, then it lands
+    const p = s.cur, grounded = !this.fits({ ...p, y: p.y + 1 });
+    if (grounded) { s.lock += dt; if (s.lock > 0.5 || (soft && s.lock > 0.12)) this.land(); }
+  },
+  render(g, W, H) {
+    const s = this.s; if (!s) return;
+    g.drawImage(stBackground(W, H), 0, 0); stDecor(g, s.t);
+    // the board: a construction pit with hazard stripes around it
+    { const x0 = ST_X - 3, y0 = ST_Y - 3, x1 = ST_X + ST_W * ST_C + 3, y1 = ST_Y + ST_H * ST_C + 3; // diagonal yellow-black stripes, 3 px wide
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { if (x >= ST_X && x < x1 - 3 && y >= ST_Y && y < y1 - 3) continue; g.fillStyle = ((x + y) >> 2) % 2 ? '#e6b44a' : '#1b1a2e'; g.fillRect(x, y, 1, 1); } }
+    g.fillStyle = '#12111f'; g.fillRect(ST_X, ST_Y, ST_W * ST_C, ST_H * ST_C);
+    g.fillStyle = '#191830'; for (let x = 1; x < ST_W; x++) g.fillRect(ST_X + x * ST_C, ST_Y, 1, ST_H * ST_C);
+    const cell = (x, y, col, dim) => {
+      if (y < 0) return; const px = ST_X + x * ST_C, py = ST_Y + y * ST_C;
+      g.fillStyle = col; g.fillRect(px, py, ST_C, ST_C);
+      g.fillStyle = 'rgba(255,255,255,.38)'; g.fillRect(px, py, ST_C, 1); g.fillRect(px, py, 1, ST_C);
+      g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(px, py + ST_C - 1, ST_C, 1); g.fillRect(px + ST_C - 1, py, 1, ST_C);
+      if (dim) { g.fillStyle = 'rgba(13,12,24,.55)'; g.fillRect(px, py, ST_C, ST_C); }
+    };
+    if (s.g) for (let y = 0; y < ST_H; y++) for (let x = 0; x < ST_W; x++) if (s.g[y][x]) {
+      const flash = s.clr && s.clr.rows.includes(y);
+      if (flash) { g.fillStyle = Math.floor(s.clr.t * 16) % 2 ? '#fff6e6' : ST_COL[s.g[y][x]]; g.fillRect(ST_X + x * ST_C, ST_Y + y * ST_C, ST_C, ST_C); }
+      else cell(x, y, ST_COL[s.g[y][x]], s.st === 'over');
+    }
+    if (s.cur && s.st === 'play') for (const [x, y] of this.cells(s.cur)) cell(x, y, ST_COL[s.cur.k]);
+    // left: score, lines, level
+    const de = this.api.lang() === 'de';
+    const lab = (t, y) => arcText(g, t, 8, y, '#7a78b0', 1), val = (t, y) => arcText(g, String(t), 8, y, '#fff6e6', 1);
+    lab(de ? 'Punkte' : 'Score', 14); val(s.score || 0, 22);
+    lab(de ? 'Reihen' : 'Lines', 36); val(s.lines || 0, 44);
+    lab(de ? 'Bauabschnitt' : 'Phase', 58); val(s.lvl || 0, 66);
+    lab(de ? 'Rekord' : 'Best', 80); val(stHi, 88);
+    // right: the next piece
+    arcText(g, de ? 'Naechstes' : 'Next', 134, 14, '#7a78b0', 1);
+    g.fillStyle = '#1b1a2e'; g.fillRect(134, 22, 30, 22);
+    if (s.next && s.st === 'play') { const c = ST_P[s.next], minx = Math.min(...c.map(q => q[0])), maxx = Math.max(...c.map(q => q[0])), w = (maxx - minx + 1) * 5, ox = 134 + ((30 - w) >> 1) - minx * 5, oy = s.next === 'I' ? 26 : 28;
+      for (const [x, y] of c) { g.fillStyle = ST_COL[s.next]; g.fillRect(ox + x * 5, oy + y * 5, 5, 5); g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(ox + x * 5, oy + y * 5, 5, 1); } }
+    // title and game over
+    if (s.st === 'title' || s.st === 'over') {
+      g.fillStyle = 'rgba(13,12,24,.82)'; g.fillRect(ST_X - 2, 44, ST_W * ST_C + 4, 52);
+      const ctr = (t, y, col, sc) => arcText(g, t, Math.round(ST_X + (ST_W * ST_C - arcTextW(t, sc)) / 2), y, col, sc);
+      if (s.st === 'title') { ctr('Stapel', 50, '#f0d98a', 2); ctr('21', 64, '#e8707c', 2); }
+      else { ctr(de ? 'Eroeffnung' : 'Opening', 52, '#e8707c', 1); ctr(de ? 'verschoben!' : 'postponed!', 60, '#e8707c', 1); if (s.hi) ctr(de ? 'Rekord!' : 'New best!', 72, '#f0d98a', 1); } // Stuttgart 21: the opening is postponed, again
+      if (Math.floor(s.t * 2) % 2 === 0) ctr(touchMode ? 'A: Start' : 'Enter: Start', 87, '#fff6e6', 1);
+      const help = touchMode ? (de ? 'Tasten unter dem Bildschirm' : 'Buttons below the screen') : (de ? 'Pfeile bewegen, Leertaste: fallen' : 'Arrows move, Space drops');
+      const hw = arcTextW(help, 1), hx = Math.round((W - hw) / 2); g.fillStyle = '#0d0c18'; g.fillRect(hx - 3, 135, hw + 6, 9); arcText(g, help, hx, 137, '#b8b6e0', 1);
+    }
+  }
+};
+ARCADE_GAMES.unshift(stGame); // first in the list
+/* ==========================================================================================
+   STATION, PART 1: the Stuttgart 21 construction-site maze (from s21-maze.html), now a level of the main game.
+   Map -> Stuttgart Hbf -> this maze -> (reach the HBF stairs) -> the roof scene (tgStart, part_f.js).
+   Kept from the original: the map, the props and all pixel art, the tile movement with cornering help, the bolts,
+   the security guard who walks your exact footsteps 2 s behind you, the camera following you up the site.
+   Changed to fit the game: our input (arrow keys / WASD, the joystick on phones; via down()), our sounds (tone),
+   the quest card instead of the title card, tips instead of the caught/win cards (caught: back to the start),
+   texts drawn on the game canvas, the game's fade. Retexturing and styling come later.
+   ========================================================================================== */
+const MZ_SPEED = 4.8;          // tiles per second while a direction is held
+const MZ_GUARD = 2.0;     // security guard walks your exact footsteps this many seconds behind you.
+                             // Any dead end longer than ~GUARD_DELAY*SPEED/2 tiles gets you caught.
+const MZ_TS = 16;           // tile size in art pixels
+const MZ_VW = 20, MZ_VH = 12; // visible tiles (canvas is 320×192)
+
+/* Map legend
+   #  solid (mz_fence on border, mz_gravel/props inside – props are placed automatically)
+   .  mz_walkable mz_dirt     S start     G goal (stairs down to the platform)
+   T  red/white tape    B barrier   P wood planks   C cones + chain
+   T/B/P/C are solid and close off some wrong paths; other dead ends are
+   left open, so you sometimes have to backtrack. Bolts appear on every
+   mz_reachable tile, so open dead ends reward the detour with extra bolts. */
+const MZ_MAP = [
+  "####################",
+  "#######...P.......G#",
+  "###########.########",
+  "#####.............##",
+  "#####.###########.##",
+  "#####.###########.##",
+  "##...############.##",
+  "##.######.........##",
+  "##.######.###.######",
+  "##B######.###.######",
+  "##........##########",
+  "##.#################",
+  "##.#################",
+  "##.#################",
+  "##................##",
+  "##############.##.##",
+  "##############.##.##",
+  "##############.#####",
+  "#####..........T..##",
+  "#####.###C#######.##",
+  "#####.###.#######.##",
+  "#####.##############",
+  "#.................##",
+  "#.###############.##",
+  "#.##########.####.##",
+  "############B####.##",
+  "############......##",
+  "############.#######",
+  "############.####.##",
+  "ES................##",
+  "####################",
+];
+const MZ_W = MZ_MAP[0].length, MZ_H = MZ_MAP.length;
+
+/* Props are scattered over solid areas automatically (deterministic).
+   [type, widthTiles, heightTiles, weight, maxCount] */
+const MZ_PROPS = [
+  ['office',        4,2, 1.0, 1],
+  ['excavator',     3,2, 1.4, 3],
+  ['pit',           3,2, 0.9, 2],
+  ['craneBase',     2,2, 0.8, 3],
+  ['crane',         4,1, 0.5, 3],
+  ['pipes',         5,1, 0.9, 99],
+  ['pipes',         4,1, 0.9, 99],
+  ['containerBlue', 3,1, 0.8, 99],
+  ['containerRed',  3,1, 0.8, 99],
+  ['rebar',         2,1, 0.7, 99],
+  ['concretePipes', 2,1, 0.7, 99],
+  ['sand',          2,1, 0.7, 99],
+  ['sand',          1,1, 0.4, 99],
+  ['pallet',        1,1, 0.6, 99],
+  ['mz_cone',          1,1, 0.5, 99],
+  ['mixer',         1,1, 0.4, 99],
+  ['loo',           1,1, 0.3, 99],
+];
+
+/* =====================================================================
+   MZ_MAP HELPERS
+   ===================================================================== */
+const mz_cell = (x,y) => (x<0||y<0||x>=MZ_W||y>=MZ_H) ? '#' : MZ_MAP[y][x];
+const mz_walkable = (x,y) => '.SG'.includes(mz_cell(x,y));
+const mz_isBlocker = (x,y) => 'TBPC'.includes(mz_cell(x,y));
+const mz_isBorder = (x,y) => x===0||y===0||x===MZ_W-1||y===MZ_H-1;
+let mz_START, mz_GOAL;
+for (let y=0;y<MZ_H;y++) for (let x=0;x<MZ_W;x++){
+  if (mz_cell(x,y)==='S') mz_START={x,y};
+  if (mz_cell(x,y)==='G') mz_GOAL={x,y};
+}
+function mz_reachable(){
+  const seen=new Set([mz_START.x+','+mz_START.y]), q=[mz_START];
+  while(q.length){
+    const {x,y}=q.shift();
+    for (const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
+      const nx=x+dx, ny=y+dy, k=nx+','+ny;
+      if (mz_walkable(nx,ny) && !seen.has(k)){ seen.add(k); q.push({x:nx,y:ny}); }
+    }
+  }
+  return seen;
+}
+
+/* =====================================================================
+   PLACEHOLDER PIXEL ART (procedural – swap for sprites later)
+   ===================================================================== */
+let mz_bg = null, mzb = null; // built on first use
+
+const mzR = (c,x,y,w,h,col) => { c.fillStyle=col; c.fillRect(x,y,w,h); };
+const mz_rnd = (x,y,s) => {
+  let h = Math.imul(x+11,374761393) ^ Math.imul(y+7,668265263) ^ Math.imul(s+3,2246822519);
+  h = Math.imul(h ^ (h>>>13), 1274126177); h ^= h>>>16;
+  return (h>>>0)/4294967296;
+};
+const mz_FONT = {
+  S:['111','100','111','001','111'], '2':['111','001','111','100','111'], '1':['010','110','010','010','111'],
+  H:['101','101','111','101','101'], B:['110','101','110','101','110'], F:['111','100','110','100','100'],
+};
+function mz_text(c,str,x,y,col){
+  [...str].forEach((ch,i)=>mz_FONT[ch].forEach((row,ry)=>[...row].forEach((v,rx)=>{ if(v==='1') mzR(c,x+i*4+rx,y+ry,1,1,col); })));
+}
+function mz_oriented(ox,oy,vertical,fn){
+  mzb.save(); mzb.translate(ox+8,oy+8); if(vertical) mzb.rotate(Math.PI/2); mzb.translate(-8,-8); fn(); mzb.restore();
+}
+// winter versions: the paths are trampled, slightly muddy snow; everything off the paths is clean snow
+function mz_dirt(x,y){
+  const ox=x*MZ_TS, oy=y*MZ_TS;
+  mzR(mzb,ox,oy,16,16,'#c9b49a');
+  const cols=['#b39d82','#dccbb4','#bda68a'];
+  for(let i=0;i<8;i++) mzR(mzb,ox+Math.floor(mz_rnd(x,y,i)*15),oy+Math.floor(mz_rnd(x,y,i+40)*15),1+(i%3===0),1,cols[i%3]);
+  for(let i=0;i<3;i++) mzR(mzb,ox+Math.floor(mz_rnd(x,y,i+80)*13),oy+Math.floor(mz_rnd(x,y,i+90)*14),2+(i%2),1,'#eef2f7'); // little snow tufts
+  if(!mz_walkable(x,y-1)) mzR(mzb,ox,oy,16,2,'rgba(60,70,100,.16)');
+  if(!mz_walkable(x-1,y)) mzR(mzb,ox,oy,1,16,'rgba(60,70,100,.1)');
+}
+function mz_gravel(x,y){
+  const ox=x*MZ_TS, oy=y*MZ_TS;
+  mzR(mzb,ox,oy,16,16,'#eef2f7');
+  for(let i=0;i<6;i++) mzR(mzb,ox+Math.floor(mz_rnd(x,y,i)*15),oy+Math.floor(mz_rnd(x,y,i+50)*15),1+(i%3===0),1,i%2?'#dfe7f0':'#f8fafc');
+  if(mz_rnd(x,y,77)<0.5) mzR(mzb,ox+Math.floor(mz_rnd(x,y,78)*14),oy+Math.floor(mz_rnd(x,y,79)*14),1,1,'#9d948a'); // a stone peeking out
+}
+function mz_fence(x,y){
+  mz_gravel(x,y);
+  const ox=x*MZ_TS, oy=y*MZ_TS;
+  const draw = () => {
+    mzR(mzb,0,5,16,6,'#aab3bc');
+    for(let i=0;i<16;i++) for(let j=6;j<10;j++) if((i+j)%2===0) mzR(mzb,i,j,1,1,'#76808a');
+    mzR(mzb,0,5,16,1,'#4a4f55'); mzR(mzb,0,10,16,1,'#4a4f55');
+    mzR(mzb,1,3,3,10,'#d9d6cf'); mzR(mzb,1,3,3,1,'#f2efe8'); // concrete foot
+    mzR(mzb,2,4,1,8,'#3d4247');                        // post
+  };
+  if (x===0||x===MZ_W-1) mz_oriented(ox,oy,true,draw);
+  if (y===0||y===MZ_H-1) mz_oriented(ox,oy,false,draw);
+}
+function mz_blocker(x,y){
+  const ox=x*MZ_TS, oy=y*MZ_TS, c=mz_cell(x,y);
+  const corridorHorizontal = mz_cell(x-1,y)!=='#' && mz_cell(x+1,y)!=='#';
+  const vertical = corridorHorizontal; // line runs across the corridor
+  mz_oriented(ox,oy,vertical,()=>{
+    if(c==='T'){ // red/white tape between two posts
+      mzR(mzb,0,6,3,4,'#3b3b3b'); mzR(mzb,13,6,3,4,'#3b3b3b');
+      for(let i=3;i<13;i+=2) mzR(mzb,i,7,2,2,((i-3)/2)%2?'#ffffff':'#d7263d');
+      for(let i=3;i<13;i+=2) mzR(mzb,i,11,2,1,((i-3)/2)%2?'#d7263d':'#ffffff');
+      mzR(mzb,0,11,3,1,'#3b3b3b'); mzR(mzb,13,11,3,1,'#3b3b3b');
+    } else if(c==='B'){ // barrier with lamp
+      mzR(mzb,1,3,3,10,'#505050'); mzR(mzb,12,3,3,10,'#505050');
+      for(let i=1;i<15;i+=3) mzR(mzb,i,6,3,4,((i-1)/3)%2?'#ffffff':'#d7263d');
+      mzR(mzb,1,5,14,1,'#7a1020'); mzR(mzb,1,10,14,1,'#7a1020');
+      mzR(mzb,7,3,2,2,'#ffd400'); mzR(mzb,7,3,1,1,'#fff6a8');
+    } else if(c==='P'){ // nailed planks
+      mzR(mzb,0,3,16,4,'#a8743a'); mzR(mzb,0,3,16,1,'#c99459'); mzR(mzb,0,6,16,1,'#7d5427');
+      mzR(mzb,0,9,16,4,'#9a6631'); mzR(mzb,0,9,16,1,'#b8834a'); mzR(mzb,0,12,16,1,'#6f4a22');
+      for(let k=0;k<12;k++) mzR(mzb,2+k,1+k,2,2,'#b5824a');
+      [[2,4],[13,4],[2,10],[13,10]].forEach(([a,d])=>mzR(mzb,a,d,1,1,'#e0e0e0'));
+    } else if(c==='C'){ // cones + chain
+      for(let i=6;i<11;i++) mzR(mzb,i,8,1,1,i%2?'#d7263d':'#ffffff');
+      mz_cone(mzb,3,8); mz_cone(mzb,12,8);
+    }
+  });
+}
+function mz_cone(c,cx,cy){
+  mzR(c,cx-3,cy-3,7,7,'#2d2d2d');
+  mzR(c,cx-2,cy-3,5,7,'#ff7a1a'); mzR(c,cx-3,cy-2,7,5,'#ff7a1a');
+  mzR(c,cx-2,cy-2,5,5,'#ffffff'); mzR(c,cx-1,cy-1,3,3,'#ff7a1a'); mzR(c,cx,cy,1,1,'#ffc08a');
+}
+function mz_goalTile(x,y){ // a ladder up to the roof (it reaches over the fence above)
+  const ox=x*MZ_TS, oy=y*MZ_TS;
+  for (const yy of [oy - MZ_TS, oy]) {
+    mzR(mzb,ox+3,yy,2,16,'#8a8f96'); mzR(mzb,ox+11,yy,2,16,'#8a8f96'); mzR(mzb,ox+3,yy,1,16,'#c0c6cc'); mzR(mzb,ox+11,yy,1,16,'#c0c6cc');
+    for (let k = 2; k < 16; k += 4) { mzR(mzb,ox+5,yy+k,6,2,'#a3a9b0'); mzR(mzb,ox+5,yy+k,6,1,'#d4d9de'); }
+  }
+  mzR(mzb,ox+2,oy+14,12,2,'rgba(0,0,0,.25)');
+}
+function mz_entryTile(x,y){ // the entrance: an open gate in the fence, the leaf swung inwards
+  const ox=x*MZ_TS, oy=y*MZ_TS;
+  mzR(mzb,ox+5,oy-2,4,5,'#d9d6cf'); mzR(mzb,ox+6,oy-4,2,6,'#3d4247');
+  mzR(mzb,ox+5,oy+13,4,5,'#d9d6cf'); mzR(mzb,ox+6,oy+12,2,6,'#3d4247');
+  mzR(mzb,ox+8,oy+12,9,2,'#aab3bc'); mzR(mzb,ox+8,oy+12,9,1,'#4a4f55'); for (let i = 9; i < 17; i += 2) mzR(mzb,ox+i,oy+9,1,4,'#76808a');
+  mzR(mzb,ox+8,oy+9,9,1,'#4a4f55');
+}
+function mz_startTile(x,y){
+  const ox=x*MZ_TS, oy=y*MZ_TS;
+  mzR(mzb,ox+3,oy+12,10,2,'#f5c400'); // painted start line
+}
+
+const mz_PROP_DRAW = {
+  office(X,Y){
+    mzR(mzb,X+2,Y+30,62,2,'rgba(0,0,0,.25)');
+    mzR(mzb,X+1,Y+2,62,28,'#e9e6de'); mzR(mzb,X+1,Y+2,62,2,'#b9b5aa'); mzR(mzb,X+1,Y+28,62,2,'#a19d93');
+    for(let i=4;i<62;i+=4) mzR(mzb,X+1+i,Y+4,1,24,'#d6d2c8');
+    [6,49].forEach(wx=>{ mzR(mzb,X+wx,Y+10,10,8,'#5b7f9c'); mzR(mzb,X+wx+1,Y+11,8,6,'#8ec9ef'); mzR(mzb,X+wx+2,Y+12,2,1,'#fff'); });
+    mzR(mzb,X+20,Y+12,8,16,'#7a8590'); mzR(mzb,X+26,Y+19,1,2,'#d9d9d9');
+    mzR(mzb,X+31,Y+9,15,9,'#d7263d'); mzR(mzb,X+32,Y+10,13,7,'#ffffff'); mz_text(mzb,'S21',X+33,Y+11,'#d7263d');
+  },
+  crane(X,Y){
+    mzR(mzb,X,Y+13,64,2,'rgba(0,0,0,.2)');
+    mzR(mzb,X,Y+4,64,1,'#c99400'); mzR(mzb,X,Y+11,64,1,'#c99400');
+    for(let i=0;i<64;i+=8){ mzR(mzb,X+i,Y+4,1,8,'#f2b705'); for(let k=0;k<8;k++) mzR(mzb,X+i+k,Y+4+k,1,1,'#f2b705'); }
+    mzR(mzb,X,Y+3,9,10,'#9a9a9a'); mzR(mzb,X,Y+6,9,1,'#7a7a7a'); mzR(mzb,X,Y+9,9,1,'#7a7a7a');
+    mzR(mzb,X+44,Y+3,5,10,'#3d3d3d'); mzR(mzb,X+46,Y+12,1,3,'#3d3d3d');
+  },
+  pit(X,Y){
+    mzR(mzb,X+1,Y+1,46,30,'#6f7377');
+    for(let i=1;i<46;i+=4){ mzR(mzb,X+i,Y+1,2,3,'#8b9095'); mzR(mzb,X+i,Y+28,2,3,'#8b9095'); }
+    mzR(mzb,X+4,Y+4,40,24,'#5b3d22'); mzR(mzb,X+4,Y+4,40,3,'#3e2916');
+    mzR(mzb,X+15,Y+14,20,10,'#3f6f8f'); mzR(mzb,X+14,Y+15,22,8,'#3f6f8f'); mzR(mzb,X+17,Y+16,6,1,'#7fb0cf'); mzR(mzb,X+26,Y+20,4,1,'#7fb0cf');
+    mzR(mzb,X+6,Y+4,1,14,'#c9c9c9'); mzR(mzb,X+10,Y+4,1,14,'#c9c9c9');
+    for(let j=6;j<18;j+=3) mzR(mzb,X+6,Y+j,5,1,'#c9c9c9');
+  },
+  sand(X,Y,w){
+    mzR(mzb,X+2,Y+7,w-4,7,'#d4ad62'); mzR(mzb,X+4,Y+5,w-8,10,'#d4ad62');
+    mzR(mzb,X+6,Y+6,Math.max(2,w-12),3,'#ead08f'); mzR(mzb,X+3,Y+13,w-6,2,'#b48f4c');
+  },
+  pallet(X,Y){
+    mzR(mzb,X+2,Y+3,12,11,'#b5874e'); for(let j=5;j<14;j+=3) mzR(mzb,X+2,Y+j,12,1,'#8a6436');
+    [[3,4],[8,4],[3,9],[8,9]].forEach(([a,d])=>{ mzR(mzb,X+a,Y+d,5,4,'#efeadf'); mzR(mzb,X+a,Y+d+3,5,1,'#cfc8b8'); });
+  },
+  mz_cone(X,Y){ mz_cone(mzb,X+8,Y+8); },
+  craneBase(X,Y){
+    mzR(mzb,X+2,Y+2,28,28,'#a7a39b'); mzR(mzb,X+2,Y+28,28,2,'#8c887f'); mzR(mzb,X+2,Y+2,28,1,'#c2beb5');
+    mzR(mzb,X+9,Y+9,14,14,'#c99400'); mzR(mzb,X+10,Y+10,12,12,'#f2b705');
+    for(let k=0;k<12;k++){ mzR(mzb,X+10+k,Y+10+k,1,1,'#b88a00'); mzR(mzb,X+21-k,Y+10+k,1,1,'#b88a00'); }
+    [[4,4],[26,4],[4,26],[26,26]].forEach(([a,d])=>mzR(mzb,X+a,Y+d,2,2,'#6d6a64'));
+  },
+  mixer(X,Y){
+    mzR(mzb,X+2,Y+4,2,4,'#222'); mzR(mzb,X+12,Y+4,2,4,'#222');
+    mzR(mzb,X+4,Y+3,8,11,'#e46a2c'); mzR(mzb,X+3,Y+5,10,7,'#e46a2c');
+    mzR(mzb,X+5,Y+6,6,1,'#b84e1a'); mzR(mzb,X+5,Y+9,6,1,'#b84e1a'); mzR(mzb,X+6,Y+2,4,2,'#3a2a20');
+  },
+  pipes(X,Y,w){
+    const pipe=(y,c,hi,sh)=>{ mzR(mzb,X,y,w,5,c); mzR(mzb,X,y,w,1,hi); mzR(mzb,X,y+4,w,1,sh); for(let f=6;f<w;f+=16) mzR(mzb,X+f,y-1,2,7,sh); };
+    pipe(Y+2,'#e0569b','#f59cc6','#a8306c'); // the famous pink groundwater pipes
+    pipe(Y+9,'#4a7fd1','#8fb5f0','#2c5296');
+  },
+  containerBlue(X,Y,w){ mz_container(X,Y,w,'#2f5f9e','#1f4170','#5584c4'); },
+  containerRed(X,Y,w){ mz_container(X,Y,w,'#a8322d','#74201c','#cc5650'); },
+  loo(X,Y){
+    mzR(mzb,X+4,Y+14,10,2,'rgba(0,0,0,.25)');
+    mzR(mzb,X+3,Y+2,10,12,'#2b6cb0'); mzR(mzb,X+4,Y+3,8,8,'#3d86d6'); mzR(mzb,X+7,Y+5,2,2,'#e8e8e8'); mzR(mzb,X+3,Y+12,10,2,'#1f4f82');
+  },
+  rebar(X,Y,w){
+    for(let j=0;j<5;j++) mzR(mzb,X+1,Y+4+j*2,w-2,1,j%2?'#8a3f22':'#a8522b');
+    mzR(mzb,X+6,Y+3,1,10,'#444'); mzR(mzb,X+w-7,Y+3,1,10,'#444');
+  },
+  concretePipes(X,Y,w){
+    for(let cx=X+8;cx<X+w;cx+=16){ const cy=Y+8;
+      mzR(mzb,cx-4,cy-6,8,12,'#a3a09a'); mzR(mzb,cx-6,cy-4,12,8,'#a3a09a');
+      mzR(mzb,cx-2,cy-4,4,8,'#4d4a45'); mzR(mzb,cx-4,cy-2,8,4,'#4d4a45'); mzR(mzb,cx-4,cy-6,8,1,'#c2beb6'); }
+  },
+  excavator(X,Y){
+    mzR(mzb,X+4,Y+29,40,2,'rgba(0,0,0,.25)');
+    mzR(mzb,X+4,Y+3,26,7,'#2b2b2b'); mzR(mzb,X+4,Y+22,26,7,'#2b2b2b');
+    for(let i=5;i<30;i+=3){ mzR(mzb,X+i,Y+4,1,5,'#4a4a4a'); mzR(mzb,X+i,Y+23,1,5,'#4a4a4a'); }
+    mzR(mzb,X+6,Y+8,22,16,'#f2b705'); mzR(mzb,X+6,Y+21,22,3,'#c99400'); mzR(mzb,X+6,Y+8,22,1,'#ffd95a');
+    mzR(mzb,X+20,Y+10,7,12,'#d9a300');
+    mzR(mzb,X+8,Y+10,10,9,'#2b2b2b'); mzR(mzb,X+9,Y+11,8,7,'#7fc8f8'); mzR(mzb,X+10,Y+12,3,1,'#ffffff');
+    mzR(mzb,X+27,Y+13,14,5,'#c99400'); mzR(mzb,X+27,Y+14,14,3,'#f2b705');
+    mzR(mzb,X+39,Y+6,5,16,'#c99400'); mzR(mzb,X+40,Y+7,3,14,'#f2b705');
+    mzR(mzb,X+37,Y+20,10,7,'#5a5a5a'); mzR(mzb,X+37,Y+26,10,1,'#3a3a3a');
+    for(let t=38;t<47;t+=3) mzR(mzb,X+t,Y+27,1,2,'#9a9a9a');
+  },
+};
+function mz_container(X,Y,w,col,dark,light){
+  mzR(mzb,X+2,Y+14,w-3,2,'rgba(0,0,0,.25)');
+  mzR(mzb,X+1,Y+2,w-2,12,col); mzR(mzb,X+1,Y+2,w-2,1,light); mzR(mzb,X+1,Y+13,w-2,1,dark);
+  for(let i=3;i<w-4;i+=3) mzR(mzb,X+1+i,Y+3,1,10,dark);
+}
+
+function mz_placeProps(){
+  const free = new Set();
+  for(let y=1;y<MZ_H-1;y++) for(let x=1;x<MZ_W-1;x++) if(mz_cell(x,y)==='#') free.add(x+','+y);
+  const fits=(x,y,w,h)=>{ for(let j=0;j<h;j++) for(let i=0;i<w;i++) if(!free.has((x+i)+','+(y+j))) return false; return true; };
+  const counts={}, placed=[];
+  for(let y=1;y<MZ_H-1;y++) for(let x=1;x<MZ_W-1;x++){
+    if(!free.has(x+','+y)) continue;
+    if(mz_rnd(x,y,99)<0.15) { free.delete(x+','+y); continue; } // leave some plain mz_gravel
+    const near=(t)=>placed.some(([pt,px,py])=>pt===t && Math.abs(px-x)<8 && Math.abs(py-y)<6);
+    const opts = MZ_PROPS.filter(([t,w,h,,max])=>(counts[t+w]||0)<max && fits(x,y,w,h) && !(w*h>=3 && near(t)));
+    if(!opts.length) continue;
+    const total = opts.reduce((s,o)=>s+o[3]*o[1]*o[2],0);
+    let r = mz_rnd(x,y,7)*total, pick=opts[0];
+    for(const o of opts){ r-=o[3]*o[1]*o[2]; if(r<=0){ pick=o; break; } }
+    const [t,w,h]=pick;
+    counts[t+w]=(counts[t+w]||0)+1;
+    for(let j=0;j<h;j++) for(let i=0;i<w;i++) free.delete((x+i)+','+(y+j));
+    placed.push([t,x,y,w,h]);
+  }
+  return placed;
+}
+
+function mz_buildBackground(){
+  for(let y=0;y<MZ_H;y++) for(let x=0;x<MZ_W;x++){
+    const c=mz_cell(x,y);
+    if(c==='#'){ mz_isBorder(x,y) ? mz_fence(x,y) : mz_gravel(x,y); }
+    else { mz_dirt(x,y); if(mz_isBlocker(x,y)) mz_blocker(x,y); if(c==='G') mz_goalTile(x,y); if(c==='S') mz_startTile(x,y); if(c==='E') mz_entryTile(x,y); }
+  }
+  for(const [type,tx,ty,tw] of mz_placeProps()) mz_PROP_DRAW[type](tx*MZ_TS,ty*MZ_TS,tw*MZ_TS);
+}
+
+function mz_drawGuard(c,px,py,face,frame,moving){
+  c.save();
+  c.translate(px,py);
+  if(face==='left'){ c.translate(16,0); c.scale(-1,1); }
+  const step = moving ? frame : 0;
+  mzR(c,3,13,10,2,'rgba(0,0,0,.3)');
+  mzR(c,5,11+(step?1:0),2,3-(step?1:0),'#1b1d22'); mzR(c,9,11+(step?0:1),2,3-(step?0:1),'#1b1d22');
+  mzR(c,4,5,8,7,'#262a33'); mzR(c,4,5,8,1,'#3a404c');            // black uniform
+  mzR(c,5,8,6,1,'#e9e9e9');                                       // SECURITY strip
+  mzR(c,9,6,1,1,'#ffd400');                                       // badge
+  mzR(c,3,6+(step?1:0),1,4,'#262a33'); mzR(c,12,6+(step?0:1),1,4,'#262a33');
+  mzR(c,12,10+(step?0:1),2,1,'#9aa1a8'); mzR(c,14,10+(step?0:1),1,1,'#fff6a8'); // torch
+  mzR(c,5,2,6,4,'#e0ac69');
+  if(face==='down'){ mzR(c,6,4,1,1,'#222'); mzR(c,9,4,1,1,'#222'); mzR(c,6,3,4,1,'#5a3b1e'); }
+  if(face==='left'||face==='right'){ mzR(c,9,4,1,1,'#222'); mzR(c,11,4,1,1,'#e0ac69'); }
+  mzR(c,4,0,8,2,'#1b1d22'); mzR(c,4,2,9,1,'#111318');               // cap + peak
+  c.restore();
+}
+
+function mz_drawPlayer(c,px,py,face,frame,moving){
+  c.save();
+  c.translate(px,py);
+  if(face==='left'){ c.translate(16,0); c.scale(-1,1); }
+  const step = moving ? frame : 0;
+  mzR(c,4,13,8,2,'rgba(0,0,0,.28)');
+  mzR(c,5,11+(step?1:0),2,3-(step?1:0),'#2d4a8a'); mzR(c,9,11+(step?0:1),2,3-(step?0:1),'#2d4a8a');
+  mzR(c,5,14,2,1,'#3b2a1a'); mzR(c,9,14,2,1,'#3b2a1a');
+  mzR(c,4,6,8,6,'#ff7a1a'); mzR(c,4,9,8,1,'#e8f0f0');
+  mzR(c,3,7+(step?1:0),1,3,'#ff7a1a'); mzR(c,12,7+(step?0:1),1,3,'#ff7a1a');
+  mzR(c,3,10+(step?1:0),1,1,'#f1c27d'); mzR(c,12,10+(step?0:1),1,1,'#f1c27d');
+  mzR(c,5,3,6,4,'#f1c27d');
+  if(face==='down'){ mzR(c,6,5,1,1,'#222'); mzR(c,9,5,1,1,'#222'); }
+  if(face==='left'||face==='right'){ mzR(c,9,5,1,1,'#222'); mzR(c,11,5,1,1,'#f1c27d'); }
+  mzR(c,4,1,8,3,'#ffd400'); mzR(c,3,3,10,1,'#e6b800'); mzR(c,6,1,2,1,'#fff38a');
+  c.restore();
+}
+
+
+/* ---------- the level ---------- */
+const MZ_DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+const MZ_NAME = (dx, dy) => dx > 0 ? 'right' : dx < 0 ? 'left' : dy < 0 ? 'up' : 'down';
+function mzBuild() { if (mz_bg) return; mz_bg = document.createElement('canvas'); mz_bg.width = MZ_W * MZ_TS; mz_bg.height = MZ_H * MZ_TS; mzb = mz_bg.getContext('2d'); mz_buildBackground(); mzSnowify(); }
+/* winter: snow caps on every prop, fence and barrier (where something stands up from the ground), the gravel snowed in,
+   trampled snow on the paths and snowbanks along their edges */
+function mzSnowify() {
+  // snow caps: wherever a prop, fence or barrier stands up from the snow, its top edge gets a cap; snowbanks along the paths
+  const W = mz_bg.width, H = mz_bg.height, im = mzb.getImageData(0, 0, W, H), d = im.data;
+  const SNOW = ['#eef2f7', '#dfe7f0', '#f8fafc', '#9d948a'].map(h => parseInt(h.slice(1), 16));
+  const col = i => (d[i * 4] << 16) | (d[i * 4 + 1] << 8) | d[i * 4 + 2];
+  const snow = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) snow[i] = SNOW.includes(col(i)) ? 1 : 0;
+  const put = (x, y, h) => { const i = (y * W + x) * 4, v = parseInt(h.slice(1), 16); d[i] = v >> 16; d[i + 1] = (v >> 8) & 255; d[i + 2] = v & 255; d[i + 3] = 255; };
+  for (let y = 1; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = y * W + x; if (snow[i] || !snow[i - W]) continue;
+    const tx = x / MZ_TS | 0, ty = y / MZ_TS | 0; if (mz_walkable(tx, ty)) continue; // only on things standing in the snow
+    put(x, y, '#f7f9fc'); if (y + 1 < H && !snow[i + W] && mz_rnd(x, y, 3) < 0.6) put(x, y + 1, '#dfe7f0');
+  }
+  for (let ty = 0; ty < MZ_H; ty++) for (let tx = 0; tx < MZ_W; tx++) { // snowbanks: an uneven white rim where a path meets the snow
+    if (!mz_walkable(tx, ty)) continue; const ox = tx * MZ_TS, oy = ty * MZ_TS;
+    for (let k = 0; k < MZ_TS; k++) {
+      const a = 1 + (mz_rnd(tx * 16 + k, ty, 11) < 0.45 ? 1 : 0);
+      if (!mz_walkable(tx, ty - 1)) for (let j = 0; j < a; j++) put(ox + k, oy + j, j ? '#dfe7f0' : '#f4f7fb');
+      if (!mz_walkable(tx, ty + 1)) for (let j = 0; j < a; j++) put(ox + k, oy + MZ_TS - 1 - j, j ? '#dfe7f0' : '#f4f7fb');
+      if (!mz_walkable(tx - 1, ty)) for (let j = 0; j < a; j++) put(ox + j, oy + k, j ? '#dfe7f0' : '#f4f7fb');
+      if (!mz_walkable(tx + 1, ty)) for (let j = 0; j < a; j++) put(ox + MZ_TS - 1 - j, oy + k, j ? '#dfe7f0' : '#f4f7fb');
+    }
+  }
+  mzb.putImageData(im, 0, 0);
+}
+function mzStart() {
+  mzBuild(); story.place = 'station'; qSig = '#'; near = null; story.think = 0; try { $('think').hidden = true; } catch (e) {}
+  story.recording = null; try { $('rec').hidden = true; } catch (e) {}
+  story.mg = { mz: true, phase: 'play', t: 0, pops: [] }; mzReset(story.mg);
+}
+function mzReset(m) { // (also after being caught) the player walks in through the gate at the bottom left
+  m.P = { fx: MZ_START_X(), fy: MZ_START_Y(), tx: MZ_START_X(), ty: MZ_START_Y(), t: 0, dx: 0, dy: -1, moving: false, face: 'right', anim: 0 };
+  m.bolts = mz_reachable(); m.bolts.delete(mz_START.x + ',' + mz_START.y); m.bolts.delete(mz_GOAL.x + ',' + mz_GOAL.y); m.total = m.bolts.size;
+  m.trail = []; m.el = 0; m.started = false; m.Gs = MZ_GUARDS.map(g => ({ ...g, gi: 0, shown: false, x: 0, y: 0, face: 'right', moving: false, anim: 0 })); m.G = m.Gs[0]; m.gShown = false;
+  m.bumpCd = {}; m.phase = 'enter'; m.wt = 0; m.camY = mzCamTarget(m);
+  noiseHit(0.25, 0.04, 700, 3); // the gate creaks
+}
+const MZ_START_X = () => mz_START.x, MZ_START_Y = () => mz_START.y;
+function mzHeldList() { return ['up', 'down', 'left', 'right'].filter(d => down(d)); }
+// one direction from what is held: while moving, a held turn that is open wins (the original's cornering help); else the current one
+function mzHeld(m) {
+  const hs = mzHeldList(); if (!hs.length) return null; if (hs.length === 1) return hs[0];
+  const P = m.P, cur = MZ_NAME(P.dx, P.dy);
+  const turn = hs.find(d => d !== cur && mz_walkable(P.fx + MZ_DIRS[d][0], P.fy + MZ_DIRS[d][1])); if (turn) return turn;
+  return hs.includes(cur) ? cur : hs[0];
+}
+function mzPx(m) { if (m.phase === 'win') { const k = Math.min(1, Math.max(0, m.wt - 0.15) / 1.3); return { x: mz_GOAL.x * MZ_TS, y: (mz_GOAL.y - k * 2.2) * MZ_TS }; } if (m.phase === 'enter') { const k = Math.min(1, m.wt / 0.7); return { x: (-1 + 2 * k) * MZ_TS, y: mz_START.y * MZ_TS }; } const P = m.P; return { x: (P.fx + (P.tx - P.fx) * P.t) * MZ_TS, y: (P.fy + (P.ty - P.fy) * P.t) * MZ_TS }; }
+function mzCamTarget(m) { const vh = Math.min(VH, MZ_VH * MZ_TS + 40); return Math.max(0, Math.min(MZ_H * MZ_TS - vh, mzPx(m).y + 8 - vh / 2)); }
+function mzPop(m, label, x, y) { m.pops.push({ l: label, x: x * MZ_TS + 8, y: y * MZ_TS + 2, t: 0 }); }
+function mzBump(m, x, y) {
+  if (!mz_isBlocker(x, y)) return; const k = x + ',' + y;
+  if ((m.bumpCd[k] || 0) > m.t) return; m.bumpCd[k] = m.t + 0.9;
+  mzPop(m, tr({ en: 'Blocked!', de: 'Gesperrt!' }), x, y); clack(0, 0.07); tone(165, 0.08, 'triangle', 0.04); // a soft clunk against the barrier
+}
+function mzStep() { noiseHit(0.03, 0.02, 1800, 1); } // a soft crunch in the snow
+function mzArrive(m, x, y) {
+  if (m.bolts.delete(x + ',' + y)) { tone(988, 0.05, 'triangle', 0.03); tone(1319, 0.07, 'triangle', 0.03, 0.05); } // like the bells in the market
+  else mzStep();
+  if (mz_cell(x, y) === 'G') mzWin(m);
+}
+function mzMove(m, dt) {
+  const P = m.P, want = mzHeld(m);
+  if (!P.moving) {
+    if (want) { const [wx, wy] = MZ_DIRS[want]; P.face = want;
+      if (mz_walkable(P.fx + wx, P.fy + wy)) { P.dx = wx; P.dy = wy; P.tx = P.fx + wx; P.ty = P.fy + wy; P.t = 0; P.moving = true; } else mzBump(m, P.fx + wx, P.fy + wy); }
+  } else {
+    if (want) { const [wx, wy] = MZ_DIRS[want]; if (wx === -P.dx && wy === -P.dy) { [P.fx, P.tx] = [P.tx, P.fx]; [P.fy, P.ty] = [P.ty, P.fy]; P.t = 1 - P.t; P.dx = wx; P.dy = wy; P.face = want; } }
+    P.t += MZ_SPEED * dt;
+    while (P.moving && P.t >= 1) {
+      const left = P.t - 1; P.fx = P.tx; P.fy = P.ty; mzArrive(m, P.fx, P.fy); if (m.phase !== 'play') return;
+      const w = mzHeld(m), stop = () => { P.moving = false; P.t = 0; P.tx = P.fx; P.ty = P.fy; };
+      if (!w) { stop(); break; }
+      const [ax, ay] = MZ_DIRS[w];
+      if (mz_walkable(P.fx + ax, P.fy + ay)) { P.dx = ax; P.dy = ay; }
+      else { mzBump(m, P.fx + ax, P.fy + ay); const cur = MZ_NAME(P.dx, P.dy); if (!(down(cur) && mz_walkable(P.fx + P.dx, P.fy + P.dy))) { stop(); break; } }
+      P.tx = P.fx + P.dx; P.ty = P.fy + P.dy; P.t = left; P.face = MZ_NAME(P.dx, P.dy);
+    }
+  }
+  if (P.moving) P.anim += dt;
+}
+/* four guards: the first walks your footsteps 2 s behind you (he is the only one who can catch you); three colleagues come in
+   through the gate later (after 4.5, 7 and 9.5 s) and walk your whole route from the start. They make it feel more and more
+   crowded, but they are always further behind on the same path, so the actual danger stays the same. */
+const MZ_GUARDS = [
+  { delay: 2, shout: { en: 'Halt!', de: 'Halt!' } }, { delay: 4.5, shout: { en: 'Stop!', de: 'Stopp!' } },
+  { delay: 7, shout: { en: 'Hey, you!', de: 'He, du!' } }, { delay: 9.5, shout: { en: 'Permit?!', de: 'Genehmigung?!' } }
+];
+function mzGuard(m, dt) {
+  for (const G of m.Gs) {
+    const target = m.el - G.delay; if (target < 0) continue;
+    while (G.gi < m.trail.length - 1 && m.trail[G.gi + 1].t <= target) G.gi++;
+    const s = m.trail[G.gi]; if (!s) continue;
+    G.moving = Math.hypot(s.x - G.x, s.y - G.y) > 0.01 && G.shown; G.x = s.x; G.y = s.y; G.face = s.face; if (G.moving) G.anim += dt;
+    if (!G.shown) { G.shown = true; if (G === m.G) m.gShown = true; mzPop(m, tr(G.shout), mz_START.x, mz_START.y); sweep(1700, 2300, 0.16, 'sine', 0.035, 0); sweep(1700, 2300, 0.22, 'sine', 0.035, 0.24); } // the whistle
+  }
+  // keep the trail as long as the last guard still needs it
+  const need = Math.min(...m.Gs.map(G => G.gi));
+  if (need > 600) { m.trail.splice(0, need); for (const G of m.Gs) G.gi -= need; }
+  const p = mzPx(m), G = m.G; if (G.shown && Math.hypot(p.x - G.x, p.y - G.y) < 10) mzCaught(m);
+}
+function mzCaught(m) {
+  m.phase = 'caught'; m.wt = 0; tone(180, 0.14, 'sawtooth', 0.045); tone(130, 0.2, 'sawtooth', 0.04, 0.1); // the game's hurt sound
+  toast(tr({ en: 'Caught by security! “No hard hat access without a permit!” Back to the start.', de: 'Vom Sicherheitsdienst erwischt! „Kein Zutritt ohne Genehmigung!“ Zurück zum Start.' }), 3.2);
+}
+function mzWin(m) {
+  m.phase = 'win'; m.wt = 0; m.P.face = 'up'; m.P.anim = 0; tone(784, 0.1, 'triangle', 0.05); tone(1047, 0.1, 'triangle', 0.05, 0.1); tone(1319, 0.25, 'triangle', 0.05, 0.2); // like finding the trumpet
+  const left = m.bolts.size;
+  toast(tr(left === 0 ? { en: 'Up the ladder to the roof! Every single bolt accounted for.', de: 'Die Leiter rauf aufs Dach! Jede einzelne Schraube eingesammelt.' }
+    : { en: 'Up the ladder to the roof! ' + left + ' bolt' + (left === 1 ? '' : 's') + ' left lying around. Someone will find ' + (left === 1 ? 'it' : 'them') + ' in 2035.', de: 'Die Leiter rauf aufs Dach! ' + left + (left === 1 ? ' Schraube bleibt' : ' Schrauben bleiben') + ' liegen. Die findet jemand 2035.' }), 3.4);
+}
+function mzUpdate(dt) {
+  const m = story.mg; if (!m) return;
+  dt = Math.min(dt, 0.05); story.t += dt; m.t += dt;
+  if (story.fadeDir > 0) { story.fade = Math.min(1, story.fade + dt * 4.5); if (story.fade >= 1) { const cb = story.fadeCb; story.fadeCb = null; story.fadeDir = -1; if (cb) cb(); } }
+  else if (story.fadeDir < 0) { story.fade = Math.max(0, story.fade - dt * 4.5); if (story.fade <= 0) story.fadeDir = 0; }
+  if (!story.mg || story.mg !== m) return;
+  if (story.toast > 0) { story.toast -= dt; if (story.toast <= 0) { const t = $('toast'); t.classList.add('off'); setTimeout(() => { if (story.toast <= 0) t.hidden = true; }, 650); } }
+  tickDialog(dt); if (useEdge) { useEdge = false; if (dlg.open) advance(); }
+  m.pops = m.pops.filter(q => (q.t += dt) < 0.85);
+  if (m.phase === 'enter') { m.wt += dt; m.P.anim += dt; if (Math.floor(m.wt * 9) !== Math.floor((m.wt - dt) * 9) && Math.floor(m.wt * 9) % 2) mzStep(); if (m.wt >= 0.7) { m.phase = 'play'; m.wt = 0; m.P.anim = 0; noiseHit(0.05, 0.08, 900, 2); } return; } // walks in, the gate clunks shut
+  if (m.phase === 'caught') { m.wt += dt; if (m.wt > 1.6) mzReset(m); return; }
+  if (m.phase === 'win') { // climbing the ladder (rung by rung), then on to the roof
+    const was = m.wt; m.wt += dt; m.P.anim += dt;
+    if (m.wt > 0.15 && m.wt < 1.45 && Math.floor(m.wt * 6) !== Math.floor(was * 6)) tone(1250 + (Math.floor(m.wt * 6) % 2) * 160, 0.035, 'triangle', 0.02);
+    if (m.wt > 1.6 && story.fadeDir === 0) { story.fadeDir = 1; story.fadeCb = tgStart; } return;
+  }
+  if (!m.started && mzHeld(m)) m.started = true;
+  mzMove(m, dt); if (m.phase !== 'play' || !m.started) return;
+  m.el += dt; const p = mzPx(m); m.trail.push({ t: m.el, x: p.x, y: p.y, face: m.P.face, moving: m.P.moving });
+  mzGuard(m, dt);
+}
+function mzRender() {
+  const m = story.mg; if (!m || !mz_bg) return;
+  const ox = Math.floor((VW - MZ_W * MZ_TS) / 2);
+  m.camY += (mzCamTarget(m) - m.camY) * Math.min(1, 0.016 * 8 * 2);
+  const cy = Math.round(m.camY), vh = VH;
+  ctx.fillStyle = '#2b2233'; ctx.fillRect(0, 0, VW, VH);
+  ctx.drawImage(mz_bg, 0, cy, MZ_W * MZ_TS, Math.min(vh, MZ_H * MZ_TS - cy), ox, 0, MZ_W * MZ_TS, Math.min(vh, MZ_H * MZ_TS - cy));
+  ctx.save(); ctx.translate(ox, -cy);
+  for (const k of m.bolts) { const [x, y] = k.split(','), bx = x * MZ_TS + 7, by = y * MZ_TS + 7; if (by < cy - 16 || by > cy + vh + 16) continue;
+    mzR(ctx, bx - 1, by, 4, 2, '#9aa1a8'); mzR(ctx, bx, by - 1, 2, 4, '#9aa1a8'); mzR(ctx, bx, by, 2, 2, '#dfe4e8'); mzR(ctx, bx + 1, by + 1, 1, 1, '#5f666d'); }
+  ctx.globalAlpha = 0.35 + 0.35 * Math.sin(m.t * 5); const gx = mz_GOAL.x * MZ_TS, gy = mz_GOAL.y * MZ_TS;
+  mzR(ctx, gx, gy, 16, 1, '#ffe14d'); mzR(ctx, gx, gy + 15, 16, 1, '#ffe14d'); mzR(ctx, gx, gy, 1, 16, '#ffe14d'); mzR(ctx, gx + 15, gy, 1, 16, '#ffe14d'); ctx.globalAlpha = 1;
+  const p = mzPx(m), G = m.G;
+  const dP = () => { const dir = { up: 'u', down: 'd', left: 'l', right: 'r' }[m.P.face] || 'u', mv = m.P.moving || m.phase === 'enter' || (m.phase === 'win' && m.wt > 0.15 && m.wt < 1.45);
+    const pose = mv ? (m.phase === 'win' ? (Math.floor(m.P.anim * 6) % 2 ? 'walk1' : 'walk3') : ['stand', 'walk1', 'stand', 'walk3'][Math.floor(m.P.anim * 9) % 4]) : 'stand', fx = Math.round(p.x) + 8, fy = Math.round(p.y) + 14;
+    ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(fx - 5, fy - 1, 10, 3); ctx.drawImage(FR[dir][pose], fx - 9, fy - 25); };
+  const who = m.Gs.filter(g => g.shown).map(g => ({ y: g.y, f: () => mz_drawGuard(ctx, Math.round(g.x), Math.round(g.y), g.face, Math.floor(g.anim * 8) % 2, g.moving) }));
+  who.push({ y: p.y + 0.5, f: dP }); who.sort((a, b) => a.y - b.y).forEach(w => w.f());
+  for (const q of m.pops) { const s = q.l, w = arcTextW(s, 1); ctx.globalAlpha = Math.min(1, 2 * (1 - q.t / 0.85)); ctx.fillStyle = 'rgba(13,12,24,.75)'; ctx.fillRect(Math.round(q.x - w / 2 - 2), Math.round(q.y - 9 - q.t * 8), w + 4, 9); arcText(ctx, s, Math.round(q.x - w / 2), Math.round(q.y - 7 - q.t * 8), '#fff6e6', 1); ctx.globalAlpha = 1; }
+  ctx.restore();
+  // the guard is close: a red pulse at the edges
+  if (m.gShown && m.phase === 'play') { const d = Math.min(...m.Gs.filter(g => g.shown).map(g => Math.hypot(p.x - g.x, p.y - g.y))) / MZ_TS;
+    if (d < 4) { ctx.globalAlpha = (1 - d / 4) * (0.45 + 0.25 * Math.sin(m.t * 12)); ctx.fillStyle = '#d7263d'; ctx.fillRect(0, 0, VW, 3); ctx.fillRect(0, VH - 3, VW, 3); ctx.fillRect(0, 0, 3, VH); ctx.fillRect(VW - 3, 0, 3, VH); ctx.globalAlpha = 1; } }
+  // the site goes on above
+  if (cy > 0 && m.phase !== 'win') { ctx.globalAlpha = 0.5 + 0.3 * Math.sin(m.t * 4); const ax = Math.round(VW / 2 - 4); for (let i = 0; i < 5; i++) { mzR(ctx, ax + i, 3 + (4 - i), 2, 2, '#ffe14d'); mzR(ctx, ax + 8 - i, 3 + (4 - i), 2, 2, '#ffe14d'); } ctx.globalAlpha = 1; }
+  // bolts counter, top right
+  { const s = tr({ en: 'Bolts', de: 'Schrauben' }) + ' ' + (m.total - m.bolts.size) + '/' + m.total, w = arcTextW(s, 1); const bx = Math.round((VW - w) / 2); ctx.fillStyle = 'rgba(13,12,24,.7)'; ctx.fillRect(bx - 4, 13, w + 8, 11); arcText(ctx, s, bx, 16, '#fff6e6', 1); } // top centre, under the 'site goes on' arrow (the ladder is top right)
+  drawSnow();
+  if (story.fade > 0) { ctx.globalAlpha = Math.min(1, story.fade); ctx.fillStyle = INK; ctx.fillRect(0, 0, VW, VH); ctx.globalAlpha = 1; }
+}
 /* ---------- go ---------- */
 const PORT = window.matchMedia ? window.matchMedia('(pointer: coarse) and (orientation: portrait) and (max-width: 700px)') : null;
 enterMap('garden', maps.garden.start);
