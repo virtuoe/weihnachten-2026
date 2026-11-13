@@ -289,6 +289,11 @@ body.tc #arcov.cg .arcpad { display: grid; }
 .arcfail[hidden] { display: none; }
 body.inarc .rotate { display: none !important; }
 .endc .rr.erow { display: flex; justify-content: center; }
+/* the Klangerfinder mark: crisp pixels scaled up (title screen top, end card signature) */
+.kflogo { display: block; margin: 0 auto; image-rendering: pixelated; }
+.tlogo { width: 84px; height: 48px; margin-bottom: 14px; opacity: .92; }
+.elogo { width: 56px; height: 32px; margin-top: -2px; opacity: .85; }
+@media (max-height: 520px) { .tlogo { width: 56px; height: 32px; margin-bottom: 6px; } .elogo { width: 42px; height: 24px; } }
 /* the time-trial scoreboard (drives after the ending) */
 .rscore .the.rsT { font-size: clamp(34px, 8vw, 52px); }
 .rsMain { font-size: 26px; } .rsMain b { font-size: 34px; letter-spacing: .04em; } .rsMain em { font-style: normal; color: #c4565f; margin-left: 6px; }
@@ -410,6 +415,7 @@ body.inrace .toast { top: 9vh; }
 <div id="title" class="ov title">
   <div class="snow" id="snow" aria-hidden="true"></div>
   <div class="box" id="tmain">
+    <canvas id="tlogo" class="kflogo tlogo" width="28" height="16" role="img" aria-label="Klangerfinder"></canvas>
     <canvas id="thc" width="40" height="30" aria-hidden="true"></canvas>
     <div><h1 data-i="tTitle">Santa Needs Help</h1><div class="tsub" data-i="tSub">A Klangerfinder Christmas adventure</div></div>
     <div class="btns">
@@ -488,6 +494,7 @@ body.inrace .toast { top: 9vh; }
   <div class="card" role="dialog" aria-modal="true">
     <div class="big" data-i="eText"></div>
     <div class="the" data-i="eEnd">The End</div>
+    <canvas id="elogo" class="kflogo elogo" width="28" height="16" role="img" aria-label="Klangerfinder"></canvas>
     <div class="rr erow"><button id="ekeep" class="mb" type="button" data-i="eKeep">Keep exploring</button></div>
   </div>
 </div>
@@ -831,6 +838,20 @@ function gateSpr(open) {
     } else { r(g, 3, 4, 3, 14, K7); r(g, 26, 4, 3, 14, K7); r(g, 3, 4, 3, 1, K9); r(g, 26, 4, 3, 1, K9); }
   });
 }
+/* the Klangerfinder mark (from the brand SVG, viewBox 1000 x 580.79), rasterized into crisp pixels for the office sign */
+const KF_LOGO_PATHS = ["M 643.74 5.82 L 631.73 16.38 L 631.73 19.65 L 625.91 30.93 L 625.91 555.31 L 630.28 564.05 L 640.83 574.6 L 649.56 578.97 L 676.49 580.42 L 681.59 577.51 L 695.05 574.6 L 705.6 562.59 L 707.06 390.47 L 709.61 385.37 L 735.44 408.66 L 737.26 408.66 L 744.18 415.94 L 772.2 437.77 L 780.57 446.51 L 808.59 468.34 L 816.96 477.07 L 818.78 477.07 L 921.76 564.41 L 939.23 574.6 L 952.33 578.97 L 958.52 578.97 L 959.24 580.42 L 971.98 580.42 L 972.71 578.97 L 984.72 576.06 L 995.27 565.5 L 999.64 554.22 L 999.64 537.12 L 989.45 517.1 L 874.09 414.85 L 872.27 414.85 L 849.34 393.01 L 847.53 393.01 L 837.7 382.82 L 835.88 382.82 L 826.06 372.63 L 824.24 372.63 L 812.95 360.99 L 811.14 360.99 L 801.31 350.8 L 787.85 340.61 L 776.56 328.97 L 774.75 328.97 L 764.92 318.78 L 763.1 318.78 L 753.28 308.59 L 739.81 298.4 L 733.26 291.85 L 733.26 290.03 L 987.99 69.14 L 995.27 56.04 L 998.18 45.85 L 998.18 26.56 L 993.81 19.65 L 992.36 13.46 L 984.72 5.82 L 974.53 1.46 L 952.33 1.46 L 939.23 5.82 L 863.9 69.87 L 862.08 69.87 L 853.71 78.6 L 843.16 85.88 L 834.79 94.61 L 815.5 109.17 L 807.13 117.9 L 787.85 132.46 L 779.48 141.19 L 760.19 155.75 L 751.82 164.48 L 741.27 171.76 L 732.9 180.49 L 706.33 200.87 L 704.15 17.83 L 695.05 5.82 L 684.86 1.46 L 660.84 0 L 660.12 1.46 Z", "M 42.58 39.3 L 32.02 49.85 L 32.02 51.67 L 17.47 65.87 L 17.47 67.69 L 4.37 80.42 L 4.37 82.24 L 0 85.88 L 0 86.97 L 308.59 394.83 L 308.59 398.11 L 232.9 473.8 L 435.95 474.16 L 436.32 271.11 L 435.59 270.74 L 357.35 349.34 L 355.53 349.34 L 240.9 234.35 L 239.08 234.35 L 44.4 39.3 Z", "M 199.42 525.84 L 199.42 580.42 L 487.26 580.42 L 487.26 525.84 L 486.9 525.47 L 199.78 525.47 Z"];
+// the mark hand-pixelled at 13 x 8 (rasterizing the SVG this small breaks up the arrow); used on the door sign and the arcade marquee
+const KF_LOGO_13x8 = ['#.......#...#', '.#......#..#.', '..#..#..#.#..', '...#.#..##...', '....##..##...', '..####..#.#..', '........#..#.', '..#####.#...#'];
+function kfLogoSmall(g, x0, y0, col) { KF_LOGO_13x8.forEach((row, y) => { for (let x = 0; x < 13; x++) if (row[x] === '#') px(g, x0 + x, y0 + y, col); }); }
+// draws the mark (rasterized from the SVG, for sizes from about 24 px wide) into a canvas element, pixel-crisp
+function kfLogoCanvas(el, w, h, col) { el.width = w; el.height = h; const g = el.getContext('2d'); g.fillStyle = col; for (const [x, y] of kfLogoMask(w, h)) g.fillRect(x, y, 1, 1); }
+function kfLogoMask(w, h) {
+  const [c, g] = mk(w, h); g.scale(w / 1000, h / 580.79); g.fillStyle = '#fff';
+  for (const d of KF_LOGO_PATHS) g.fill(new Path2D(d), 'evenodd');
+  const im = g.getImageData(0, 0, w, h).data, on = [];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (im[(y * w + x) * 4 + 3] > 110) on.push([x, y]);
+  return on;
+}
 function officeSpr() {
   return sprite(112, 96, g => {
     r(g, 84, 2, 10, 22, K4); r(g, 84, 2, 10, 2, K10); r(g, 90, 4, 4, 20, K3);
@@ -856,6 +877,12 @@ function officeSpr() {
       r(g, x - 1, 62, 18, 20, K2); r(g, x, 63, 16, 18, '#fbe7a6'); r(g, x + 7, 63, 2, 18, K2); r(g, x, 71, 16, 2, K2);
       r(g, x + 1, 64, 5, 6, K9); r(g, x - 2, 82, 20, 3, K4); for (let i = 0; i < 5; i++) px(g, x + i * 4, 81, i % 2 ? K10 : K7);
     });
+    // the company sign on the wall next to the door (left): a dark nameplate with the white Klangerfinder mark
+    r(g, 31, 64, 17, 13, '#1f1a28'); r(g, 32, 65, 15, 11, '#2b2233'); r(g, 31, 64, 17, 1, '#4b4060'); r(g, 31, 76, 17, 1, '#16121d');
+    px(g, 32, 65, '#6a6a7e'); px(g, 46, 65, '#6a6a7e'); px(g, 32, 75, '#6a6a7e'); px(g, 46, 75, '#6a6a7e'); // screws
+    // the mark, hand-pixelled at 13 x 8 (rasterizing the SVG this small breaks up the arrow): the 45° arrow with its square head
+    // and the bar below it, then the K (stem, arm, leg)
+    kfLogoSmall(g, 33, 67, '#fff6e6');
     // fairy lights along the roof edge
     for (let x = 4; x < 110; x += 8) { px(g, x, 23, K10); px(g, x + 1, 23, K10); px(g, x, 24, K8); }
   });
@@ -5493,16 +5520,18 @@ const KEY_SPR = sprite(10, 5, g => { // a little brass key, bow on the left
   r(g, 0, 0, 4, 5, '#e6b44a'); r(g, 1, 1, 2, 3, '#7d5545'); r(g, 0, 0, 4, 1, '#f7dd8c');
   r(g, 4, 2, 6, 1, '#e6b44a'); r(g, 4, 1, 6, 1, '#f7dd8c'); r(g, 7, 3, 1, 2, '#e6b44a'); r(g, 9, 3, 1, 2, '#e6b44a');
 });
-const ARCADE_SPR = sprite(30, 46, g => { // the cabinet, seen from the front
-  r(g, 0, 4, 30, 42, '#2b2a4a'); r(g, 2, 4, 26, 42, '#3a3966'); r(g, 0, 4, 2, 42, '#1f1e38'); r(g, 28, 4, 2, 42, '#1f1e38');
-  r(g, 1, 0, 28, 7, '#c4565f'); r(g, 1, 0, 28, 1, '#e8707c'); r(g, 1, 6, 28, 1, '#8f3a44');                    // marquee
-  for (let i = 0; i < 7; i++) r(g, 5 + i * 3, 2, 2, 2, NOTE_COL[i]);                                             // seven note dots
+const ARCADE_SPR = sprite(30, 50, g => { // the cabinet, seen from the front
+  r(g, 0, 8, 30, 42, '#2b2a4a'); r(g, 2, 8, 26, 42, '#3a3966'); r(g, 0, 8, 2, 42, '#1f1e38'); r(g, 28, 8, 2, 42, '#1f1e38');
+  r(g, 1, 0, 28, 11, '#c4565f'); r(g, 1, 0, 28, 1, '#e8707c'); r(g, 1, 10, 28, 1, '#8f3a44');                  // marquee
+  kfLogoSmall(g, 8, 1, '#fff6e6');                                                                                 // the Klangerfinder mark
+  g.translate(0, 4); // the rest as before, 4 px lower
   r(g, 4, 9, 22, 16, '#11101c'); r(g, 5, 10, 20, 14, '#1b3a4a');                                                // screen (lit in .after)
   r(g, 2, 26, 26, 6, '#4b4a7a'); r(g, 2, 26, 26, 1, '#6a6a9e');                                                  // control panel
   r(g, 7, 27, 2, 3, '#1b1a2a'); r(g, 6, 26, 4, 2, '#e8707c');                                                    // joystick
   r(g, 15, 28, 3, 2, '#f0d98a'); r(g, 20, 28, 3, 2, '#7ec8ff');                                                  // buttons
   r(g, 9, 35, 12, 7, '#1f1e38'); r(g, 13, 37, 4, 1, '#f0d98a'); r(g, 13, 39, 4, 1, '#f0d98a');                  // coin door
   r(g, 0, 44, 30, 2, '#1b1a2a');
+  g.translate(0, -4);
 });
 const WORKBENCH = sprite(44, 26, g => {
   r(g, 0, 8, 44, 4, '#a8795f'); r(g, 0, 8, 44, 1, '#c19478'); r(g, 0, 11, 44, 1, '#7d5545');
@@ -5543,9 +5572,9 @@ function buildGarage() {
   addEnt(GWIN, 2 * T + 2, 20, 38, 'wall');
   addEnt(PEGBOARD, 4 * T + 6, 22, 44, 'wall');
   // the arcade machine against the back wall: its screen flickers through a little attract loop
-  const cab = addEnt(ARCADE_SPR, 8 * T + 4, 4 * T - 30, 5 * T + 4, 'soft', 8 * T + 19); solid(8, 4, 2, 1, Infinity);
+  const cab = addEnt(ARCADE_SPR, 8 * T + 4, 4 * T - 34, 5 * T + 4, 'soft', 8 * T + 19); solid(8, 4, 2, 1, Infinity);
   cab.after = (cx, cy) => {
-    const sx = Math.round(cab.x - cx) + 1 + 5, sy = Math.round(cab.top - cy) + 1 + 10, t = story.t;
+    const sx = Math.round(cab.x - cx) + 1 + 5, sy = Math.round(cab.top - cy) + 1 + 14, t = story.t;
     ctx.fillStyle = '#123040'; ctx.fillRect(sx, sy, 20, 14);
     for (let i = 0; i < 7; i++) { const h = 2 + Math.round((Math.sin(t * 3 + i * 0.9) * 0.5 + 0.5) * 7); ctx.fillStyle = NOTE_COL[i]; ctx.fillRect(sx + 2 + i * 2 + (i > 3 ? 1 : 0), sy + 12 - h, 1, h); }
     if (Math.floor(t * 2) % 2) { ctx.fillStyle = '#fff6e6'; ctx.fillRect(sx + 4, sy + 2, 12, 1); }
@@ -5660,13 +5689,15 @@ function arcFrame(now) {
   arc.raf = requestAnimationFrame(arcFrame);
 }
 // the attract screen: starfield, the title, seven bouncing note bars, a blinking line
+let arcLogo = null;
 function arcAttract(g) {
   const t = arc.t;
   g.fillStyle = '#0d0c18'; g.fillRect(0, 0, ARC_W, ARC_H);
   for (let i = 0; i < 40; i++) { const x = (i * 53 + t * (8 + i % 5 * 6)) % ARC_W, y = (i * 37) % (ARC_H - 20); g.fillStyle = i % 3 ? '#3a3966' : '#7a78b0'; g.fillRect(Math.floor(ARC_W - x), y, 1, 1); }
   const title = 'KLANGERFINDER', sub = 'ARCADE';
-  arcText(g, title, Math.round((ARC_W - arcTextW(title, 2)) / 2), 22, '#f0d98a', 2);
-  arcText(g, sub, Math.round((ARC_W - arcTextW(sub, 3)) / 2), 38, '#e8707c', 3);
+  if (!arcLogo) arcLogo = kfLogoMask(28, 16); for (const [x, y] of arcLogo) { g.fillStyle = '#fff6e6'; g.fillRect(82 + x, 4 + y, 1, 1); } // the Klangerfinder mark
+  arcText(g, title, Math.round((ARC_W - arcTextW(title, 2)) / 2), 24, '#f0d98a', 2);
+  arcText(g, sub, Math.round((ARC_W - arcTextW(sub, 3)) / 2), 39, '#e8707c', 3);
   for (let i = 0; i < 7; i++) { const h = 6 + Math.round((Math.sin(t * 4 + i * 0.8) * 0.5 + 0.5) * 22); g.fillStyle = NOTE_COL[i]; g.fillRect(54 + i * 12, 104 - h, 8, h); g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(54 + i * 12, 104 - h, 8, 1); }
   g.fillStyle = '#2b2a4a'; g.fillRect(40, 106, 112, 2);
   if (Math.floor(t * 1.6) % 2) { const s = ARCADE_GAMES.length ? (lang === 'de' ? 'Wähle ein Spiel' : 'Choose a game') : (lang === 'de' ? 'Bald verfügbar' : 'Coming soon'); arcText(g, s, Math.round((ARC_W - arcTextW(s, 1)) / 2), 120, '#fff6e6', 1); }
@@ -5763,6 +5794,9 @@ document.querySelectorAll('#arcpad [data-ak]').forEach(btn => {
   const up = () => { arc.held[k] = false; btn.classList.remove('on'); };
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => btn.addEventListener(t, up));
 });
+
+// the Klangerfinder mark on the title screen and as the signature on the end card
+kfLogoCanvas($('tlogo'), 28, 16, '#fff6e6'); kfLogoCanvas($('elogo'), 28, 16, '#3a2a3c');
 /* ==========================================================================================
    ACHIEVEMENTS: a small joke, not a collect-them-all system.
    - Six of them, kept in memory only (story.ach); a reload resets everything.
