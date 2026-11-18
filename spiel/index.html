@@ -125,7 +125,7 @@ body.tc #prompt, body.tc:not(.inmg) .think, body.tc:not(.inmg) .toast { pointer-
 @media (prefers-reduced-motion: reduce) { .lvlb.go { animation: none; opacity: 1; } }
 
 /* on-screen controls, shown on touch devices */
-.touch { display: none; position: fixed; z-index: 4; left: max(36px, calc(env(safe-area-inset-left, 0px) + 16px)); right: max(36px, calc(env(safe-area-inset-right, 0px) + 16px)); bottom: max(30px, calc(env(safe-area-inset-bottom, 0px) + 14px)); /* up and in from the edges, easier to reach */ justify-content: space-between; align-items: flex-end; gap: 16px; user-select: none; -webkit-user-select: none; touch-action: none; pointer-events: none; }
+.touch { display: none; position: fixed; z-index: 4; left: max(5vw, calc(env(safe-area-inset-left, 0px) + 24px)); right: max(5vw, calc(env(safe-area-inset-right, 0px) + 24px)); bottom: max(5vh, calc(env(safe-area-inset-bottom, 0px) + 18px)); /* 75 % bigger controls, further in from the corners (Nov 10) */ /* up and in from the edges, easier to reach */ justify-content: space-between; align-items: flex-end; gap: 16px; user-select: none; -webkit-user-select: none; touch-action: none; pointer-events: none; }
 .touch > * { pointer-events: auto; }
 /* body.tc = touch mode (set in JS from the device, then from what the player actually uses) */
 body.tc .touch { display: flex; }
@@ -137,20 +137,20 @@ body.tc .touch { display: flex; }
 .touch[data-ctx="dpad"] .acts, .touch[data-ctx="race"] .acts, .touch[data-ctx="lr"] .acts { display: none; }
 /* the joystick (part_b2.js): walking scenes, the market run, the tree climb, the station rooftop and the race. It replaces the arrows,
    and pulling it past the edge sprints, so the Sprint button goes there too. Tetris, the rhythm game and the church keep the arrows. */
-.stick { display: none; position: relative; width: 188px; height: 188px; touch-action: none; -webkit-user-select: none; user-select: none; }
+.stick { display: none; position: relative; width: 329px; height: 329px; touch-action: none; -webkit-user-select: none; user-select: none; }
 .touch[data-ctx="walk"] .stick, .touch[data-ctx="market"] .stick, .touch[data-ctx="lr"] .stick, .touch[data-ctx="race"] .stick { display: block; }
 .touch[data-ctx="walk"] .dpad, .touch[data-ctx="market"] .dpad, .touch[data-ctx="lr"] .dpad, .touch[data-ctx="race"] .dpad { display: none; }
 .touch[data-ctx="walk"] [data-k="sprint"], .touch[data-ctx="market"] [data-k="sprint"] { display: none; }
-.sbase { position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px; border-radius: 50%; border: 3px solid var(--fg); background: rgba(43, 34, 51, .45); box-shadow: inset 0 0 0 10px rgba(255, 246, 230, .06); pointer-events: none; }
-.sknob { position: absolute; left: 50%; top: 50%; width: 66px; height: 66px; margin: -33px 0 0 -33px; border-radius: 50%; border: 3px solid var(--fg); border-bottom-width: 5px; background: rgba(43, 34, 51, .85); pointer-events: none; transition: background .12s; }
+.sbase { position: absolute; left: 50%; top: 50%; width: 245px; height: 245px; margin: -122.5px 0 0 -122.5px; border-radius: 50%; border: 3px solid var(--fg); background: rgba(43, 34, 51, .45); box-shadow: inset 0 0 0 10px rgba(255, 246, 230, .06); pointer-events: none; }
+.sknob { position: absolute; left: 50%; top: 50%; width: 116px; height: 116px; margin: -58px 0 0 -58px; border-radius: 50%; border: 3px solid var(--fg); border-bottom-width: 5px; background: rgba(43, 34, 51, .85); pointer-events: none; transition: background .12s; }
 .stick.on .sknob { background: rgba(126, 200, 255, .55); }
 .stick.run .sbase { border-color: #f3d98a; } .stick.run .sknob { background: #f3d98a; }
-.dpad { display: grid; grid-template-columns: repeat(3, 62px); grid-template-rows: repeat(3, 62px); gap: 5px; }
+.dpad { display: grid; grid-template-columns: repeat(3, 108px); grid-template-rows: repeat(3, 108px); gap: 9px; }
 .dpad .up { grid-area: 1 / 2; } .dpad .left { grid-area: 2 / 1; } .dpad .right { grid-area: 2 / 3; } .dpad .down { grid-area: 3 / 2; }
-.pad { background: rgba(43, 34, 51, .72); border: 2px solid var(--fg); border-radius: 8px; border-bottom-width: 5px; font-size: 30px; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.pad { background: rgba(43, 34, 51, .72); border: 2px solid var(--fg); border-radius: 8px; border-bottom-width: 5px; font-size: 52px; touch-action: none; -webkit-tap-highlight-color: transparent; }
 .pad.on { background: var(--fg); color: #000; }
-.acts { display: grid; gap: 12px; }
-.acts .pad { width: 100px; height: 56px; font-size: 25px; text-transform: uppercase; letter-spacing: .06em; }
+.acts { display: grid; gap: 21px; }
+.acts .pad { width: 175px; height: 98px; font-size: 44px; text-transform: uppercase; letter-spacing: .06em; }
 
 /* ---- overlays: title, map, studio, end card ---- */
 .ov { position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; background: rgba(43, 34, 51, .8); padding: 14px; overflow: auto; }
@@ -348,11 +348,11 @@ body.inrace .toast { top: 9vh; }
   .chip { font-size: 18px; padding: 2px 8px 3px; }
   .quest { max-width: min(300px, 38vw); padding: 4px 9px 5px; }
   .quest .qt { font-size: 14px; margin-bottom: 2px; } .quest .qh { font-size: 20px; } .quest .qs { font-size: 16px; } .quest .qp { margin-top: 3px; }
-  .touch { bottom: max(18px, calc(env(safe-area-inset-bottom, 0px) + 10px)); left: max(26px, calc(env(safe-area-inset-left, 0px) + 12px)); right: max(26px, calc(env(safe-area-inset-right, 0px) + 12px)); }
-  .dpad { grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); gap: 4px; }
-  .stick { width: 166px; height: 166px; } .sbase { width: 124px; height: 124px; margin: -62px 0 0 -62px; } .sknob { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
-  .pad { font-size: 26px; }
-  .acts { gap: 8px; } .acts .pad { width: 94px; height: 48px; font-size: 21px; }
+  .touch { bottom: max(5vh, calc(env(safe-area-inset-bottom, 0px) + 12px)); left: max(5vw, calc(env(safe-area-inset-left, 0px) + 18px)); right: max(5vw, calc(env(safe-area-inset-right, 0px) + 18px)); }
+  .dpad { grid-template-columns: repeat(3, 94px); grid-template-rows: repeat(3, 94px); gap: 7px; }
+  .stick { width: 290px; height: 290px; } .sbase { width: 217px; height: 217px; margin: -108.5px 0 0 -108.5px; } .sknob { width: 101px; height: 101px; margin: -50.5px 0 0 -50.5px; }
+  .pad { font-size: 45px; }
+  .acts { gap: 14px; } .acts .pad { width: 164px; height: 84px; font-size: 37px; }
   .walkhint { font-size: max(22px, calc(var(--u, 3) * 8px)); top: min(24vh, 26%); }
   .toast { font-size: max(21px, calc(var(--u, 3) * 7.5px)); }
   .rec { top: max(6px, env(safe-area-inset-top, 0px)); }
@@ -5908,8 +5908,8 @@ function achNext() {
 let achBoost = 0, achCr = 0;
 function achTick(dt) {
   const A = story.ach;
-  // Work-Life-Balance: 15 seconds in the hammock in one go
-  if (!A.work && p.rest && p.rest.kind === 'hammock' && p.rest.t >= 15) achUnlock('work');
+  // Work-Life-Balance: 5 seconds in the hammock in one go (Nov 10: was 15)
+  if (!A.work && p.rest && p.rest.kind === 'hammock' && p.rest.t >= 5) achUnlock('work');
   // Animal-Friend: all 7 hens and both cats petted (garden cat, office cat)
   if (!A.animals) {
     const hens = maps.garden.actors.filter(a => a.kind === 'hen'), cats = [maps.garden, maps.office].map(m => m.actors.find(a => a.kind === 'cat')).filter(Boolean);
